@@ -7,10 +7,12 @@ import { APIs_V1 } from './routes/v1/index.js'
 const START_SERVER = async () => {
   const app = express()
 
+  app.use(express.json())
+
   app.use('/v1', APIs_V1)
 
   app.get('/', (req, res) => {
-    res.end('<h1>Hello World!</h1><hr>')
+    res.end('<h1>Hello World!</h1>')
   })
 
   app.listen(env.APP_PORT, env.APP_HOST, () => {

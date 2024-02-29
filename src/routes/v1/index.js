@@ -9,7 +9,7 @@ Router.get('/status', (req, res) => {
   res.status(StatusCodes.OK).json({ message: 'api v1 are ready to use' })
 })
 
-//boards APIS
+//boards APIS all before /vi/boards
 Router.use('/boards', boardRouter)
 
 //export Router set name is APIs_V1

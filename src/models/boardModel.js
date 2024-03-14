@@ -1,4 +1,6 @@
 import Joi from 'joi'
+import { ObjectId } from 'mongodb'
+import { GET_DB } from '~/config/mongodb'
 
 const BOARD_COLLECTION_NAME = 'boards'
 const BOARD_COLLECTION_SCHEMA = Joi.object({
@@ -13,7 +15,32 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
+const validateBeforeCreate = async (data) => {
+  return await BOARD_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
+}
+
+const createNew = async (data) => {
+  try {
+    const db = await GET_DB()
+    const validData = await validateBeforeCreate(data)
+    const createBoard = await db.collection(BOARD_COLLECTION_NAME).insertOne(validData)
+    return createBoard
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const findOneById = async (boardId) => {
+  const db = await GET_DB()
+  const createBoard = await db.collection(BOARD_COLLECTION_NAME).findOne({
+    _id: new ObjectId(boardId)
+  })
+  return createBoard
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
-  BOARD_COLLECTION_SCHEMA
+  BOARD_COLLECTION_SCHEMA,
+  createNew,
+  findOneById
 }

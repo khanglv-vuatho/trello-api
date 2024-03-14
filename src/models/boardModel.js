@@ -31,16 +31,34 @@ const createNew = async (data) => {
 }
 
 const findOneById = async (boardId) => {
-  const db = await GET_DB()
-  const createBoard = await db.collection(BOARD_COLLECTION_NAME).findOne({
-    _id: new ObjectId(boardId)
-  })
-  return createBoard
+  try {
+    const db = await GET_DB()
+    const createBoard = await db.collection(BOARD_COLLECTION_NAME).findOne({
+      _id: new ObjectId(boardId)
+    })
+    return createBoard
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const getDetails = async (boardId) => {
+  try {
+    const db = await GET_DB()
+    const board = await db.collection(BOARD_COLLECTION_NAME).findOne({
+      _id: new ObjectId(boardId)
+    })
+
+    return board
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
   createNew,
-  findOneById
+  findOneById,
+  getDetails
 }

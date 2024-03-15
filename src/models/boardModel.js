@@ -1,6 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { GET_DB } from '~/config/mongodb'
+import { BOARD_TYPES } from '~/utils/constants'
 
 const BOARD_COLLECTION_NAME = 'boards'
 const BOARD_COLLECTION_SCHEMA = Joi.object({
@@ -8,6 +9,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   slug: Joi.string().required().min(3).trim().strict(),
   description: Joi.string().required().min(3).max(256).trim().strict(),
   columnOrderIds: Joi.array().items(Joi.string()).default([]),
+  type: Joi.string().valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE).required(),
   createAt: Joi.date()
     .timestamp('javascript')
     .default(() => new Date()),

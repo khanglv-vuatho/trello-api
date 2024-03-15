@@ -1,7 +1,7 @@
 import { slugify } from '~/utils/formatters'
-import { boardModel } from '~/models/boardModel'
 import { StatusCodes } from 'http-status-codes'
 import ApiError from '~/utils/ApiError'
+import { boardModel } from '~/models/boardModel'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch

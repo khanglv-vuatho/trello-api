@@ -17,6 +17,7 @@ const createNew = async (req, res, next) => {
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
   }
 }
+//ads
 export const boardValidation = {
   createNew
 }

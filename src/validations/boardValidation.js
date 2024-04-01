@@ -18,8 +18,6 @@ const createNew = async (req, res, next) => {
   }
 }
 
-// test
-
 export const boardValidation = {
   createNew
 }

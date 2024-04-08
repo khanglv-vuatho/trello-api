@@ -24,7 +24,21 @@ const getDetails = async (req, res, next) => {
     next(error)
   }
 }
+
+const update = async (req, res, next) => {
+  try {
+    const boardId = req.params.id
+    // Điều hướng sang service
+    const updateBoard = await boardService.update(boardId, req.body)
+    res.status(StatusCodes.OK).json(updateBoard)
+  } catch (error) {
+    //next(error) để đẩy sang errorhandling
+    next(error)
+  }
+}
+
 export const boardController = {
   createNew,
-  getDetails
+  getDetails,
+  update
 }

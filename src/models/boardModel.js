@@ -2,6 +2,8 @@ import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { GET_DB } from '~/config/mongodb'
 import { BOARD_TYPES } from '~/utils/constants'
+import { columnModel } from './columnModel'
+import { cardModel } from './cardModel'
 
 const BOARD_COLLECTION_NAME = 'boards'
 const BOARD_COLLECTION_SCHEMA = Joi.object({
@@ -16,6 +18,8 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   updateAt: Joi.date().timestamp('javascript').default(null),
   _destroy: Joi.boolean().default(false)
 })
+
+const INVALID_UPDATE_FIELDS = ['_id', 'updateAt']
 
 const validateBeforeCreate = async (data) => {
   return await BOARD_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
@@ -47,11 +51,76 @@ const findOneById = async (boardId) => {
 const getDetails = async (boardId) => {
   try {
     const db = await GET_DB()
-    const board = await db.collection(BOARD_COLLECTION_NAME).findOne({
-      _id: new ObjectId(boardId)
+    const result = await db
+      .collection(BOARD_COLLECTION_NAME)
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(boardId),
+            _destroy: false
+          }
+        },
+        {
+          $lookup: {
+            from: columnModel.COLUMN_COLLECTION_NAME,
+            localField: '_id',
+            foreignField: 'boardId',
+            as: 'columns'
+          }
+        },
+        {
+          $lookup: {
+            from: cardModel.CARD_COLLECTION_NAME,
+            localField: '_id',
+            foreignField: 'boardId',
+            as: 'cards'
+          }
+        }
+      ])
+      .toArray()
+
+    return result[0] || null
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const pushColumnOrderIds = async (column) => {
+  try {
+    const db = await GET_DB()
+    const result = await db.collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(column.boardId) },
+      {
+        $push: { columnOrderIds: new ObjectId(column._id) }
+      },
+      { returnDocument: 'after' }
+    )
+
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const update = async (boardId, updateData) => {
+  try {
+    Object.keys(updateData).forEach((fields) => {
+      if (INVALID_UPDATE_FIELDS.includes(fields)) {
+        delete updateData[fields]
+      }
     })
 
-    return board
+    const db = await GET_DB()
+
+    const result = await db.collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(boardId) },
+      {
+        $set: updateData
+      },
+      { returnDocument: 'after' }
+    )
+
+    return result
   } catch (error) {
     throw new Error(error)
   }
@@ -62,5 +131,7 @@ export const boardModel = {
   BOARD_COLLECTION_SCHEMA,
   createNew,
   findOneById,
-  getDetails
+  getDetails,
+  pushColumnOrderIds,
+  update
 }

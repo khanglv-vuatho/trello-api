@@ -110,6 +110,13 @@ const update = async (boardId, updateData) => {
       }
     })
 
+    // xử lí string để objectId
+
+    console.log(updateData.columnOrderIds)
+    if (updateData.columnOrderIds) {
+      updateData.columnOrderIds = updateData.columnOrderIds.map((columnId) => new ObjectId(columnId))
+    }
+
     const db = await GET_DB()
 
     const result = await db.collection(BOARD_COLLECTION_NAME).findOneAndUpdate(

@@ -76,6 +76,9 @@ const update = async (columnId, updateData) => {
       }
     })
 
+    // xử li string => objectId
+    if (updateData.cardOrderIds) updateData.cardOrderIds = updateData.cardOrderIds.map((cardId) => new ObjectId(cardId))
+
     const db = await GET_DB()
     const result = await db.collection(COLUMN_COLLECTION_NAME).findOneAndUpdate(
       { _id: new ObjectId(columnId) },

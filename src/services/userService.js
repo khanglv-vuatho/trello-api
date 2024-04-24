@@ -1,6 +1,4 @@
-import { StatusCodes } from 'http-status-codes'
 import { userModel } from '~/models/userModel'
-import ApiError from '~/utils/ApiError'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch

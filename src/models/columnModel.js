@@ -104,12 +104,28 @@ const deleteOneById = async (columnId) => {
   }
 }
 
+const pullCardOrderIds = async (column) => {
+  try {
+    const db = await GET_DB()
+    const result = await db.collection(COLUMN_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(column.columnId) },
+      {
+        $pull: { cardOrderIds: new ObjectId(column._id) }
+      },
+      { returnDocument: 'after' }
+    )
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
 export const columnModel = {
   COLUMN_COLLECTION_NAME,
   COLUMN_COLLECTION_SCHEMA,
   createNew,
   findOneById,
   pushCardOrderIds,
+  pullCardOrderIds,
   update,
   deleteOneById
 }

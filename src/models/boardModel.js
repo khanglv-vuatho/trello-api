@@ -113,7 +113,6 @@ const update = async (boardId, updateData) => {
 
     // xử lí string để objectId
 
-    console.log(updateData.columnOrderIds)
     if (updateData.columnOrderIds) {
       updateData.columnOrderIds = updateData.columnOrderIds.map((columnId) => new ObjectId(columnId))
     }

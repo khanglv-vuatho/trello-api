@@ -8,4 +8,6 @@ Router.route('/').post(cardValidation.createNew, cardController.createNew)
 
 Router.route('/:id').delete(cardValidation.deleteCard, cardController.deleteCard)
 
+Router.route('/rename/:id').put(cardValidation.update, cardController.update)
+
 export const cardRouter = Router

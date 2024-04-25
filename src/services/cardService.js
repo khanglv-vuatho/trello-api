@@ -44,7 +44,21 @@ const deleteCard = async (cardId) => {
   }
 }
 
+const update = async (cardId, reqBody) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const updateData = {
+      ...reqBody
+    }
+    const updatedCard = await cardModel.update(cardId, updateData)
+    return updatedCard
+  } catch (error) {
+    throw error
+  }
+}
+
 export const cardService = {
   createNew,
-  deleteCard
+  deleteCard,
+  update
 }

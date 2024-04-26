@@ -8,11 +8,6 @@ module.exports = {
     requireConfigFile: false,
     allowImportExportEverywhere: true
   },
-  server: {
-    host: true,
-    strictPort: true,
-    port: 4000
-  },
   plugins: [],
   rules: {
     'no-extra-boolean-cast': 0,

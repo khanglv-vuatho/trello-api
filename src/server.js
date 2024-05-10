@@ -5,13 +5,13 @@ import { env } from './config/environment.js'
 import { APIs_V1 } from './routes/v1/index.js'
 import cors from 'cors'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware.js'
-import { corsOptions } from './config/cors.js'
+// import { corsOptions } from './config/cors.js'
 
 const START_SERVER = async () => {
   const app = express()
   const port = process.env.APP_PORT || 5000
 
-  app.use(cors(corsOptions))
+  app.use(cors())
 
   app.use(express.json())
 
@@ -24,9 +24,15 @@ const START_SERVER = async () => {
     res.end('<h1>Hello World!</h1>')
   })
 
-  app.listen(port, () => {
-    console.log(`Hello World, I am running at http://${env.APP_HOST}:${port}`)
-  })
+  if (env.BUILD_MODE === 'production') {
+    app.listen(process.env.PORT, () => {
+      console.log(`Hello World, I am running at PORT : ${process.env.PORT}`)
+    })
+  } else {
+    app.listen(env.APP_PORT, env.APP_HOST, () => {
+      console.log(`Hello World, I am running at http://${env.APP_HOST}:${port}`)
+    })
+  }
 
   exitHook(() => {
     console.log('Closing database connection')

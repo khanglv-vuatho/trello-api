@@ -9,7 +9,7 @@ import { corsOptions } from './config/cors.js'
 
 const START_SERVER = async () => {
   const app = express()
-  const port = 4000
+  const port = process.env || 5000
 
   app.use(cors(corsOptions))
 
@@ -24,7 +24,7 @@ const START_SERVER = async () => {
     res.end('<h1>Hello World!</h1>')
   })
 
-  app.listen(port, env.APP_HOST, () => {
+  app.listen(port, () => {
     console.log(`Hello World, I am running at http://${env.APP_HOST}:${port}`)
   })
 

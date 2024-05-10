@@ -5,13 +5,13 @@ import { env } from './config/environment.js'
 import { APIs_V1 } from './routes/v1/index.js'
 import cors from 'cors'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware.js'
-// import { corsOptions } from './config/cors.js'
+import { corsOptions } from './config/cors.js'
 
 const START_SERVER = async () => {
   const app = express()
   const port = process.env.APP_PORT || 5000
 
-  app.use(cors())
+  app.use(cors(corsOptions))
 
   app.use(express.json())
 

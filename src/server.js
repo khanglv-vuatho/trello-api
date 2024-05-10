@@ -9,7 +9,7 @@ import { corsOptions } from './config/cors.js'
 
 const START_SERVER = async () => {
   const app = express()
-  const port = process.env || 5000
+  const port = process.env.APP_PORT || 5000
 
   app.use(cors(corsOptions))
 

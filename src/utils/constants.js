@@ -3,6 +3,6 @@
  * YouTube: https://youtube.com/@trungquandev
  * "A bit of fragrance clings to the hand that gives flowers!"
  */
-export const WHITELIST_DOMAINS = ['http://localhost:3000', 'https://trello-web-sand-one.vercel.app']
+export const WHITELIST_DOMAINS = ['http://localhost:3000', 'https://trello-web-sand-one.vercel.app', 'https://auto-send-request.onrender.com']
 
 export const BOARD_TYPES = { PUBLIC: 'public', PRIVATE: 'private' }

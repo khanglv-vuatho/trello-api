@@ -7,7 +7,8 @@ export const WHITELIST_DOMAINS = [
   'http://localhost:3000',
   'https://trello-web-sand-one.vercel.app',
   'https://auto-send-request.onrender.com',
-  'www.trisielts.online'
+  'www.trisielts.online',
+  'https://www.trisielts.online'
 ]
 
 export const BOARD_TYPES = { PUBLIC: 'public', PRIVATE: 'private' }

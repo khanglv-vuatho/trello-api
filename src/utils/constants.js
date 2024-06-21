@@ -5,7 +5,7 @@
  */
 export const WHITELIST_DOMAINS = [
   'http://localhost:3000',
-  'https://trello-web-sand-one.vercel.app',
+  'https://trello-web-yv1v.vercel.app',
   'https://auto-send-request.onrender.com',
   'www.trisielts.online',
   'https://www.trisielts.online'

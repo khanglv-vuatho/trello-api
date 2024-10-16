@@ -6,7 +6,7 @@ const createNew = async (req, res, next) => {
     // Điều hướng sang service
     const createUser = await userService.createNew(req.body)
 
-    res.status(StatusCodes.CREATED).json({
+    res.status(StatusCodes.OK).json({
       recentBoard: [],
       boards: createUser
     })

@@ -89,9 +89,34 @@ const moveCardToDifferentColumn = async (reqBody) => {
   }
 }
 
+const addMemberToBoard = async (boardId, memberGmails) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const board = await boardModel.findOneById(boardId)
+    if (!board) throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+
+    const updatedBoard = await boardModel.addMemberToBoard(boardId, memberGmails)
+    return updatedBoard
+  } catch (error) {
+    throw error
+  }
+}
+
+const removeMemberFromBoard = async (boardId, memberGmails) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const board = await boardModel.removeMemberFromBoard(boardId, memberGmails)
+    return board
+  } catch (error) {
+    throw error
+  }
+}
+
 export const boardService = {
   createNew,
   getDetails,
   update,
-  moveCardToDifferentColumn
+  moveCardToDifferentColumn,
+  addMemberToBoard,
+  removeMemberFromBoard
 }

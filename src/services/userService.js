@@ -6,7 +6,6 @@ const createNew = async (reqBody) => {
     const newUser = {
       ...reqBody
     }
-
     const createdUser = await userModel.createNew(newUser)
     const dataUser = await userModel.getDetails(createdUser.email)
 

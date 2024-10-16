@@ -48,9 +48,33 @@ const moveCardToDifferentColumn = async (req, res, next) => {
   }
 }
 
+const addMemberToBoard = async (req, res, next) => {
+  try {
+    const boardId = req.params.id
+    const memberGmails = req.body.memberGmails
+    const board = await boardService.addMemberToBoard(boardId, memberGmails)
+    res.status(StatusCodes.OK).json(board)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const removeMemberFromBoard = async (req, res, next) => {
+  try {
+    const boardId = req.params.id
+    const memberGmails = req.body.memberGmails
+    const board = await boardService.removeMemberFromBoard(boardId, memberGmails)
+    res.status(StatusCodes.OK).json(board)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const boardController = {
   createNew,
   getDetails,
   update,
-  moveCardToDifferentColumn
+  moveCardToDifferentColumn,
+  addMemberToBoard,
+  removeMemberFromBoard
 }

@@ -15,4 +15,8 @@ Router.route('/:id').get(boardController.getDetails).put(boardValidation.update,
 
 Router.route('/supports/moving_card').put(boardValidation.moveCardToDifferentColumn, boardController.moveCardToDifferentColumn)
 
+Router.route('/:id/members')
+  .post(boardValidation.addMemberToBoard, boardController.addMemberToBoard)
+  .delete(boardValidation.removeMemberFromBoard, boardController.removeMemberFromBoard)
+
 export const boardRouter = Router

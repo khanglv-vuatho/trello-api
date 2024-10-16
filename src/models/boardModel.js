@@ -16,6 +16,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
     .timestamp('javascript')
     .default(() => new Date()),
   updateAt: Joi.date().timestamp('javascript').default(null),
+  memberGmails: Joi.array().items(Joi.string()).default([]),
   _destroy: Joi.boolean().default(false)
 })
 
@@ -148,6 +149,30 @@ const pullColumnOrderIds = async (column) => {
   }
 }
 
+const addMemberToBoard = async (boardId, memberGmails) => {
+  try {
+    const db = await GET_DB()
+    const result = await db
+      .collection(BOARD_COLLECTION_NAME)
+      .findOneAndUpdate({ _id: new ObjectId(boardId) }, { $addToSet: { memberGmails: { $each: memberGmails } } }, { returnDocument: 'after' })
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const removeMemberFromBoard = async (boardId, memberGmails) => {
+  try {
+    const db = await GET_DB()
+    const result = await db
+      .collection(BOARD_COLLECTION_NAME)
+      .findOneAndUpdate({ _id: new ObjectId(boardId) }, { $pull: { memberGmails: { $in: memberGmails } } }, { returnDocument: 'after' })
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -156,5 +181,7 @@ export const boardModel = {
   getDetails,
   pushColumnOrderIds,
   update,
-  pullColumnOrderIds
+  pullColumnOrderIds,
+  addMemberToBoard,
+  removeMemberFromBoard
 }

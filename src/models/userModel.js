@@ -1,7 +1,5 @@
 import Joi from 'joi'
-import { ObjectId } from 'mongodb'
 import { GET_DB } from '~/config/mongodb'
-import { columnModel } from './columnModel'
 import { boardModel } from './boardModel'
 
 const USER_COLLECTION_NAME = 'users'

@@ -8,6 +8,7 @@ import { cardModel } from './cardModel'
 const BOARD_COLLECTION_NAME = 'boards'
 const BOARD_COLLECTION_SCHEMA = Joi.object({
   title: Joi.string().required().min(3).max(50).trim().strict(),
+  searchVietnamese: Joi.string().required().min(3).max(50).trim().strict(),
   slug: Joi.string().required().min(3).trim().strict(),
   ownerId: Joi.string().required().min(3).max(50).trim().strict().email(),
   columnOrderIds: Joi.array().items(Joi.string()).default([]),
@@ -173,6 +174,33 @@ const removeMemberFromBoard = async (boardId, memberGmails) => {
   }
 }
 
+const getAll = async (email) => {
+  try {
+    const db = await GET_DB()
+    const result = await db.collection(BOARD_COLLECTION_NAME).find({ _destroy: false, ownerId: email }).toArray()
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const search = async (keyword) => {
+  try {
+    const db = await GET_DB()
+    const result = await db
+      .collection(BOARD_COLLECTION_NAME)
+      .aggregate([
+        {
+          $match: { _destroy: false, searchVietnamese: { $regex: keyword, $options: 'i' } }
+        }
+      ])
+      .toArray()
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -183,5 +211,7 @@ export const boardModel = {
   update,
   pullColumnOrderIds,
   addMemberToBoard,
-  removeMemberFromBoard
+  removeMemberFromBoard,
+  getAll,
+  search
 }

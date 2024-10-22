@@ -1,17 +1,21 @@
-import { slugify } from '~/utils/formatters'
 import { StatusCodes } from 'http-status-codes'
-import ApiError from '~/utils/ApiError'
-import { boardModel } from '~/models/boardModel'
 import { cloneDeep } from 'lodash'
-import { columnModel } from '~/models/columnModel'
+import { normalizeKeyword } from '~/helpers/normallize'
+import sendMail from '~/helpers/sendMail'
+import { boardModel } from '~/models/boardModel'
 import { cardModel } from '~/models/cardModel'
+import { columnModel } from '~/models/columnModel'
+import { userModel } from '~/models/userModel'
+import ApiError from '~/utils/ApiError'
+import { slugify } from '~/utils/formatters'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
   try {
     const newBoard = {
       ...reqBody,
-      slug: slugify(reqBody.title)
+      slug: slugify(reqBody.title),
+      searchVietnamese: normalizeKeyword(reqBody.title)
     }
 
     const createdBoard = await boardModel.createNew(newBoard)
@@ -93,9 +97,39 @@ const addMemberToBoard = async (boardId, memberGmails) => {
   // eslint-disable-next-line no-useless-catch
   try {
     const board = await boardModel.findOneById(boardId)
+    // check if board exists
     if (!board) throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
 
+    // check if owner is in memberGmails
+    if (board.memberGmails.includes(board.ownerId)) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Owner cannot be added to the board')
+    }
+    // check if memberGmails is in board.memberGmails
+    if (board.memberGmails.some((email) => memberGmails.includes(email))) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Member already exists')
+    }
+
+    // send mail to member
+    await Promise.all(
+      memberGmails.map((email) =>
+        sendMail({
+          to: email,
+          subject: 'You are invited to join a Trello board!',
+          username: email
+        })
+      )
+    )
     const updatedBoard = await boardModel.addMemberToBoard(boardId, memberGmails)
+    // update notification of user
+    // const notification = {
+    //   type: 'invite',
+    //   title: 'You are invited to join a Trello board 123!',
+    //   ownerId: board.ownerId,
+    //   boardId,
+    //   boardTitle: updatedBoard.title
+    // }
+    // await userModel.pushNotification(board.ownerId, notification)
+
     return updatedBoard
   } catch (error) {
     throw error
@@ -112,11 +146,23 @@ const removeMemberFromBoard = async (boardId, memberGmails) => {
   }
 }
 
+const getAll = async (email) => {
+  const boards = await boardModel.getAll(email)
+  return boards
+}
+
+const search = async (keyword) => {
+  const boards = await boardModel.search(keyword)
+  return boards
+}
+
 export const boardService = {
   createNew,
+  getAll,
   getDetails,
   update,
   moveCardToDifferentColumn,
   addMemberToBoard,
-  removeMemberFromBoard
+  removeMemberFromBoard,
+  search
 }

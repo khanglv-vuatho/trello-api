@@ -1,9 +1,24 @@
 pull là xoá field với giá trị 
 set là update the value
 
-(member)
-invite member 
-show member in board
-670f83d661c03713a810aab8
 
-doi post users thanh get 
+(member)
+invite member (post , delete) => done
+show member in board => done
+doi post users thanh get => done
+check when create new board check if user exists => done 
+check if exit user of memberGmails and isOwner throw error => done
+
+Todo:
+search boards
+
+update stared, recenet board open
+detail user
+detail of card
+push notification
+socket to notification
+accept invite from email to join a board
+private/public board (url public and private)
+jwt
+comment card
+

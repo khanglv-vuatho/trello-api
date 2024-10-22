@@ -54,12 +54,13 @@ const moveCardToDifferentColumn = async (req, res, next) => {
 }
 
 const addMemberToBoard = async (req, res, next) => {
-  console.log('memberGmails')
   const correctCondition = Joi.object({
     memberGmails: Joi.array().required().items(Joi.string().email())
   })
+
   try {
     await correctCondition.validateAsync(req.body, { abortEarly: false })
+
     next()
   } catch (error) {
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
@@ -77,10 +78,35 @@ const removeMemberFromBoard = async (req, res, next) => {
   }
 }
 
+const getAll = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    email: Joi.string().required().email()
+  })
+  try {
+    await correctCondition.validateAsync(req.query, { abortEarly: false })
+    next()
+  } catch (error) {
+    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
+  }
+}
+const search = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    keyword: Joi.string().required()
+  })
+  try {
+    await correctCondition.validateAsync(req.query, { abortEarly: false })
+    next()
+  } catch (error) {
+    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
+  }
+}
+
 export const boardValidation = {
   createNew,
   update,
   moveCardToDifferentColumn,
   addMemberToBoard,
-  removeMemberFromBoard
+  removeMemberFromBoard,
+  getAll,
+  search
 }

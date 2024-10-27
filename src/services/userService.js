@@ -1,7 +1,4 @@
-import { StatusCodes } from 'http-status-codes'
-import { generateToken, verifyToken } from '~/helpers/jwt'
 import { userModel } from '~/models/userModel'
-import ApiError from '~/utils/ApiError'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
@@ -11,22 +8,11 @@ const createNew = async (reqBody) => {
     }
     //check if user already exists
     const user = await userModel.getDetails(newUser.email)
-    if (user) {
-      return {
-        ...user,
-        detailUser: verifyToken(user.token)
-      }
-    }
+    if (user) return user
 
-    // handle create a  token for user
-
-    const userPayload = generateToken(newUser)
     const createdUser = await userModel.createNew(newUser)
     const dataUser = await userModel.getDetails(createdUser.email)
-    return {
-      ...dataUser,
-      detailUser: userPayload
-    }
+    return dataUser
   } catch (error) {
     throw error
   }
@@ -46,7 +32,13 @@ const getDetails = async (email) => {
   }
 }
 
+const getMe = async (email, tokenGoogle) => {
+  const user = await userModel.getDetails(email)
+  return user
+}
+
 export const userService = {
   createNew,
-  getDetails
+  getDetails,
+  getMe
 }

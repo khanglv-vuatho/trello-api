@@ -5,7 +5,6 @@ import { env } from './config/environment.js'
 import { CLOSE_DB, CONNECT_DB } from './config/mongodb.js'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware.js'
 import { APIs_V1 } from './routes/v1/index.js'
-import { authenticateJWT } from './middlewares/authenticateJWT.js'
 
 const START_SERVER = async () => {
   const app = express()

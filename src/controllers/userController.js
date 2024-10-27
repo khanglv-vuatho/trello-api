@@ -31,7 +31,18 @@ const getDetails = async (req, res, next) => {
   }
 }
 
+const getMe = async (req, res, next) => {
+  try {
+    const { email, tokenGoogle } = req.user
+    const user = await userService.getDetails(email, tokenGoogle)
+    res.status(StatusCodes.OK).json(user)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const userController = {
   createNew,
-  getDetails
+  getDetails,
+  getMe
 }

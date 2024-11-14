@@ -4,7 +4,6 @@ import { boardRouter } from './boardRoute'
 import { cardRouter } from './cardRouter'
 import { columnRouter } from './columnRouter'
 import { userRouter } from './userRoute'
-import { authenticateJWT } from '~/middlewares/authenticateJWT'
 
 const Router = express.Router()
 

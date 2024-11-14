@@ -17,14 +17,12 @@ const getDetails = async (req, res, next) => {
   try {
     const boardId = req.params.id
     // Điều hướng sang service
-    console.log({ boardId })
     const board = await boardService.getDetails(boardId)
     if (board?.memberGmails?.length >= 1) {
       const membersClone = await Promise.all(board?.memberGmails?.map((email) => userService.getDetails(email)))
       board.memberGmails = [...membersClone]
     }
 
-    console.log({ board })
     res.status(StatusCodes.OK).json(board)
   } catch (error) {
     //next(error) để đẩy sang errorhandling
@@ -80,6 +78,7 @@ const removeMemberFromBoard = async (req, res, next) => {
     next(error)
   }
 }
+
 const getAll = async (req, res, next) => {
   try {
     const email = req.query.email
@@ -99,6 +98,17 @@ const search = async (req, res, next) => {
     next(error)
   }
 }
+
+const deleteBoard = async (req, res, next) => {
+  try {
+    const boardId = req.params.id
+    const board = await boardService.deleteBoard(boardId)
+    res.status(StatusCodes.OK).json(board)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const boardController = {
   createNew,
   getAll,
@@ -107,5 +117,6 @@ export const boardController = {
   moveCardToDifferentColumn,
   addMemberToBoard,
   removeMemberFromBoard,
-  search
+  search,
+  deleteBoard
 }

@@ -8,14 +8,16 @@ show member in board => done
 doi post users thanh get => done
 check when create new board check if user exists => done 
 check if exit user of memberGmails and isOwner throw error => done
+delete board => done
+update stared => done
+push notification => done
 
 Todo:
+get notification
 search boards
-
-update stared, recenet board open
+recenet board open
 detail user
 detail of card
-push notification
 socket to notification
 accept invite from email to join a board
 private/public board (url public and private)

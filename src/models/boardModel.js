@@ -150,12 +150,24 @@ const pullColumnOrderIds = async (column) => {
   }
 }
 
-const addMemberToBoard = async (boardId, memberGmails) => {
+const addMemberToBoard = async (boardId, memberGmails, status) => {
   try {
     const db = await GET_DB()
-    const result = await db
-      .collection(BOARD_COLLECTION_NAME)
-      .findOneAndUpdate({ _id: new ObjectId(boardId) }, { $addToSet: { memberGmails: { $each: memberGmails } } }, { returnDocument: 'after' })
+    const result = await db.collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(boardId) },
+      {
+        $addToSet: {
+          memberGmails: {
+            $each: memberGmails.map((email) => ({
+              email,
+              status
+            }))
+          }
+        }
+      },
+      { returnDocument: 'after' }
+    )
+
     return result
   } catch (error) {
     throw new Error(error)
@@ -201,6 +213,14 @@ const search = async (keyword) => {
   }
 }
 
+const deleteBoard = async (boardId) => {
+  const db = await GET_DB()
+  const result = await db
+    .collection(BOARD_COLLECTION_NAME)
+    .findOneAndUpdate({ _id: new ObjectId(boardId) }, { $set: { _destroy: true } }, { returnDocument: 'after' })
+  return result
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -213,5 +233,6 @@ export const boardModel = {
   addMemberToBoard,
   removeMemberFromBoard,
   getAll,
-  search
+  search,
+  deleteBoard
 }

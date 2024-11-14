@@ -12,8 +12,7 @@ const USER_COLLECTION_SCHEMA = Joi.object({
   given_name: Joi.string().required(),
   family_name: Joi.string().required(),
   picture: Joi.string().uri().required(),
-  displayName: Joi.string().default(Joi.ref('name')),
-  tokenGoogle: Joi.string().required()
+  displayName: Joi.string().default(Joi.ref('name'))
 })
 
 const checkIfUserExists = async (email) => {
@@ -72,15 +71,21 @@ const update = async (email, data) => {
 
 const pushNotification = async (email, data) => {
   const db = await GET_DB()
-  const result = await db.collection(USER_COLLECTION_NAME).updateOne({ email }, { $push: data })
+  const result = await db.collection(USER_COLLECTION_NAME).updateOne({ email }, { $push: { notification: data } })
   return result
 }
 
-const getMe = async (email, tokenGoogle) => {
+const getMe = async (email) => {
   const db = await GET_DB()
-  const result = await db.collection(USER_COLLECTION_NAME).findOne({ email, tokenGoogle })
+  const result = await db.collection(USER_COLLECTION_NAME).findOne({ email })
   if (!result) return null
 
+  return result
+}
+
+const getNotification = async (email) => {
+  const db = await GET_DB()
+  const result = await db.collection(USER_COLLECTION_NAME).findOne({ email }, { projection: { notification: 1 } })
   return result
 }
 
@@ -92,5 +97,6 @@ export const userModel = {
   findOneByEmail,
   update,
   pushNotification,
-  getMe
+  getMe,
+  getNotification
 }

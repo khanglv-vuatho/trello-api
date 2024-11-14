@@ -15,7 +15,10 @@ Router.route('/get-all').get(boardValidation.getAll, boardController.getAll)
 
 Router.route('/supports/moving_card').put(boardValidation.moveCardToDifferentColumn, boardController.moveCardToDifferentColumn)
 
-Router.route('/:id').get(boardController.getDetails).put(boardValidation.update, boardController.update)
+Router.route('/:id')
+  .get(boardController.getDetails)
+  .put(boardValidation.update, boardController.update)
+  .delete(boardValidation.deleteBoard, boardController.deleteBoard)
 
 Router.route('/:id/members')
   .post(boardValidation.addMemberToBoard, boardController.addMemberToBoard)

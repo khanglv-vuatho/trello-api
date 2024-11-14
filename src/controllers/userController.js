@@ -1,8 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
-import { env } from '~/config/environment'
-import { userService } from '~/services/userService'
-import jwt from 'jsonwebtoken'
 import { updateToken } from '~/helpers/jwt'
+import { userService } from '~/services/userService'
 
 const createNew = async (req, res, next) => {
   try {
@@ -24,8 +22,9 @@ const createNew = async (req, res, next) => {
 const getDetails = async (req, res, next) => {
   try {
     console.log(req.params.email)
+    const notification = await userService.getNotification(req.params.email)
     const user = await userService.getDetails(req.params.email)
-    res.status(StatusCodes.OK).json(user)
+    res.status(StatusCodes.OK).json({ user, notification })
   } catch (error) {
     next(error)
   }
@@ -33,8 +32,8 @@ const getDetails = async (req, res, next) => {
 
 const getMe = async (req, res, next) => {
   try {
-    const { email, tokenGoogle } = req.user
-    const user = await userService.getDetails(email, tokenGoogle)
+    const { email } = req.user
+    const user = await userService.getDetails(email)
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)

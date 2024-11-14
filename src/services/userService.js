@@ -23,7 +23,7 @@ const getDetails = async (email) => {
     const user = await userModel.getDetails(email)
 
     if (!user) {
-      return { email, status: 'pending' }
+      return email
     }
 
     return user
@@ -32,13 +32,19 @@ const getDetails = async (email) => {
   }
 }
 
-const getMe = async (email, tokenGoogle) => {
+const getMe = async (email) => {
   const user = await userModel.getDetails(email)
   return user
+}
+
+const getNotification = async (email) => {
+  const notification = await userModel.getNotification(email)
+  return notification
 }
 
 export const userService = {
   createNew,
   getDetails,
-  getMe
+  getMe,
+  getNotification
 }

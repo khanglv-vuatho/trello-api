@@ -119,16 +119,20 @@ const addMemberToBoard = async (boardId, memberGmails) => {
         })
       )
     )
-    const updatedBoard = await boardModel.addMemberToBoard(boardId, memberGmails)
+
+    const updatedBoard = await boardModel.addMemberToBoard(boardId, memberGmails, 'pending')
+
+    console.log({ updatedBoard: JSON.stringify(updatedBoard) })
     // update notification of user
-    // const notification = {
-    //   type: 'invite',
-    //   title: 'You are invited to join a Trello board 123!',
-    //   ownerId: board.ownerId,
-    //   boardId,
-    //   boardTitle: updatedBoard.title
-    // }
-    // await userModel.pushNotification(board.ownerId, notification)
+    const notification = {
+      type: 'invite',
+      title: `You are invited to join a board ${updatedBoard.title}!`,
+      ownerId: board.ownerId,
+      boardId,
+      boardTitle: updatedBoard.title,
+      status: 'pending'
+    }
+    await Promise.all(memberGmails.map((email) => userModel.pushNotification(email, notification)))
 
     return updatedBoard
   } catch (error) {
@@ -156,6 +160,11 @@ const search = async (keyword) => {
   return boards
 }
 
+const deleteBoard = async (boardId) => {
+  const board = await boardModel.deleteBoard(boardId)
+  return board
+}
+
 export const boardService = {
   createNew,
   getAll,
@@ -164,5 +173,6 @@ export const boardService = {
   moveCardToDifferentColumn,
   addMemberToBoard,
   removeMemberFromBoard,
-  search
+  search,
+  deleteBoard
 }

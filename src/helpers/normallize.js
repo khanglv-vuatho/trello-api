@@ -1,5 +1,4 @@
 export const normalizeKeyword = (keyword) => {
-  console.log({ keyword })
   return keyword
     .normalize('NFD')
     .toLowerCase()

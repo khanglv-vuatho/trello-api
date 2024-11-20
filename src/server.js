@@ -21,7 +21,6 @@ const START_SERVER = async () => {
 
   app.get('/', (req, res) => {
     res.end('<h1>Hello World!</h1>')
-    console.log(123)
   })
 
   if (env.BUILD_MODE === 'production') {

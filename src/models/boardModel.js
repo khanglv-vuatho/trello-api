@@ -174,18 +174,6 @@ const addMemberToBoard = async (boardId, memberGmails, status) => {
   }
 }
 
-const removeMemberFromBoard = async (boardId, memberGmails) => {
-  try {
-    const db = await GET_DB()
-    const result = await db
-      .collection(BOARD_COLLECTION_NAME)
-      .findOneAndUpdate({ _id: new ObjectId(boardId) }, { $pull: { memberGmails: { $in: memberGmails } } }, { returnDocument: 'after' })
-    return result
-  } catch (error) {
-    throw new Error(error)
-  }
-}
-
 const getAll = async (email) => {
   try {
     const db = await GET_DB()
@@ -231,7 +219,6 @@ export const boardModel = {
   update,
   pullColumnOrderIds,
   addMemberToBoard,
-  removeMemberFromBoard,
   getAll,
   search,
   deleteBoard

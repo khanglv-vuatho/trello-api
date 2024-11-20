@@ -8,6 +8,7 @@ import { columnModel } from '~/models/columnModel'
 import { userModel } from '~/models/userModel'
 import ApiError from '~/utils/ApiError'
 import { slugify } from '~/utils/formatters'
+import { notificationService } from './notificationService'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
@@ -101,11 +102,11 @@ const addMemberToBoard = async (boardId, memberGmails) => {
     if (!board) throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
 
     // check if owner is in memberGmails
-    if (board.memberGmails.includes(board.ownerId)) {
+    if (board?.memberGmails?.includes(board.ownerId)) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'Owner cannot be added to the board')
     }
     // check if memberGmails is in board.memberGmails
-    if (board.memberGmails.some((email) => memberGmails.includes(email))) {
+    if (board?.memberGmails?.some((email) => memberGmails?.includes(email))) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'Member already exists')
     }
 
@@ -122,29 +123,26 @@ const addMemberToBoard = async (boardId, memberGmails) => {
 
     const updatedBoard = await boardModel.addMemberToBoard(boardId, memberGmails, 'pending')
 
-    console.log({ updatedBoard: JSON.stringify(updatedBoard) })
-    // update notification of user
-    const notification = {
-      type: 'invite',
-      title: `You are invited to join a board ${updatedBoard.title}!`,
-      ownerId: board.ownerId,
+    const invitation = {
       boardId,
       boardTitle: updatedBoard.title,
       status: 'pending'
     }
-    await Promise.all(memberGmails.map((email) => userModel.pushNotification(email, notification)))
+
+    await Promise.all(
+      memberGmails.map((email) =>
+        notificationService.createNew({
+          ownerId: email,
+          authorId: board.ownerId,
+          status: 'unread',
+          type: 'invite',
+          title: `You are invited to join a board ${updatedBoard.title}!`,
+          invitation
+        })
+      )
+    )
 
     return updatedBoard
-  } catch (error) {
-    throw error
-  }
-}
-
-const removeMemberFromBoard = async (boardId, memberGmails) => {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    const board = await boardModel.removeMemberFromBoard(boardId, memberGmails)
-    return board
   } catch (error) {
     throw error
   }
@@ -172,7 +170,6 @@ export const boardService = {
   update,
   moveCardToDifferentColumn,
   addMemberToBoard,
-  removeMemberFromBoard,
   search,
   deleteBoard
 }

@@ -10,10 +10,10 @@ check when create new board check if user exists => done
 check if exit user of memberGmails and isOwner throw error => done
 delete board => done
 update stared => done
-push notification => done
 
 Todo:
 get notification
+push notification 
 search boards
 recenet board open
 detail user

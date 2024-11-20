@@ -6,7 +6,6 @@ const USER_COLLECTION_SCHEMA = Joi.object({
   email: Joi.string().required().min(3).max(50).trim().strict().email(),
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(null),
-  notification: Joi.array().default([]),
   verified_email: Joi.boolean().required(),
   name: Joi.string().required(),
   given_name: Joi.string().required(),
@@ -69,12 +68,6 @@ const update = async (email, data) => {
   return result
 }
 
-const pushNotification = async (email, data) => {
-  const db = await GET_DB()
-  const result = await db.collection(USER_COLLECTION_NAME).updateOne({ email }, { $push: { notification: data } })
-  return result
-}
-
 const getMe = async (email) => {
   const db = await GET_DB()
   const result = await db.collection(USER_COLLECTION_NAME).findOne({ email })
@@ -96,7 +89,6 @@ export const userModel = {
   getDetails,
   findOneByEmail,
   update,
-  pushNotification,
   getMe,
   getNotification
 }

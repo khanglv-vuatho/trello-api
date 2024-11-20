@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import { boardService } from '~/services/boardService'
+import { notificationService } from '~/services/notificationService'
 import { userService } from '~/services/userService'
 
 const createNew = async (req, res, next) => {
@@ -68,17 +69,6 @@ const addMemberToBoard = async (req, res, next) => {
   }
 }
 
-const removeMemberFromBoard = async (req, res, next) => {
-  try {
-    const boardId = req.params.id
-    const memberGmails = req.body.memberGmails
-    const board = await boardService.removeMemberFromBoard(boardId, memberGmails)
-    res.status(StatusCodes.OK).json(board)
-  } catch (error) {
-    next(error)
-  }
-}
-
 const getAll = async (req, res, next) => {
   try {
     const email = req.query.email
@@ -116,7 +106,6 @@ export const boardController = {
   update,
   moveCardToDifferentColumn,
   addMemberToBoard,
-  removeMemberFromBoard,
   search,
   deleteBoard
 }

@@ -20,7 +20,7 @@ const getDetails = async (req, res, next) => {
     // Điều hướng sang service
     const board = await boardService.getDetails(boardId, email)
 
-    // update recent boards
+    // get member details
     if (board?.memberGmails?.length >= 1) {
       const membersClone = await Promise.all(board?.memberGmails?.map((email) => userService.getDetails(email)))
       board.memberGmails = [...membersClone]

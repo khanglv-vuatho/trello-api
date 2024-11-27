@@ -79,7 +79,6 @@ const getDetails = async (boardId, email) => {
           }
         }
       ])
-      .sort({ updateAt: -1 })
       .toArray()
 
     const memberGmails = result[0].memberGmails.map((member) => member.email)
@@ -184,7 +183,7 @@ const addMemberToBoard = async (boardId, memberGmails, status) => {
 const getAll = async (email) => {
   try {
     const db = await GET_DB()
-    const result = await db.collection(BOARD_COLLECTION_NAME).find({ _destroy: false, ownerId: email }).toArray()
+    const result = await db.collection(BOARD_COLLECTION_NAME).find({ _destroy: false, ownerId: email }).sort({ updateAt: -1 }).toArray()
     return result
   } catch (error) {
     throw new Error(error)

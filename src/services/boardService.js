@@ -5,7 +5,6 @@ import sendMail from '~/helpers/sendMail'
 import { boardModel } from '~/models/boardModel'
 import { cardModel } from '~/models/cardModel'
 import { columnModel } from '~/models/columnModel'
-import { userModel } from '~/models/userModel'
 import ApiError from '~/utils/ApiError'
 import { slugify } from '~/utils/formatters'
 import { notificationService } from './notificationService'
@@ -43,6 +42,9 @@ const getDetails = async (boardId, email) => {
     })
 
     delete resBoard.cards
+
+    // update updateAt field
+    await boardModel.update(boardId, { updateAt: Date.now() })
 
     return resBoard
   } catch (error) {

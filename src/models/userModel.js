@@ -63,7 +63,8 @@ const findOneByEmail = async (email) => {
 
 const update = async (email, data) => {
   const db = await GET_DB()
-  const result = await db.collection(USER_COLLECTION_NAME).updateOne({ email }, { $set: data })
+  const updateData = { ...data, updatedAt: Date.now() }
+  const result = await db.collection(USER_COLLECTION_NAME).findOneAndUpdate({ email }, { $set: updateData }, { returnDocument: 'after' })
   return result
 }
 

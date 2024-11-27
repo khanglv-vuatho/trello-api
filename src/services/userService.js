@@ -42,9 +42,15 @@ const getNotification = async (email) => {
   return notification
 }
 
+const update = async (email, reqBody) => {
+  const user = await userModel.update(email, reqBody)
+  return user
+}
+
 export const userService = {
   createNew,
   getDetails,
   getMe,
-  getNotification
+  getNotification,
+  update
 }

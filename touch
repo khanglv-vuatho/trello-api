@@ -10,8 +10,10 @@ check when create new board check if user exists => done
 check if exit user of memberGmails and isOwner throw error => done
 delete board => done
 update stared => done
+recent board => done
 
 Todo:
+check title when user create board update board 
 add workspace when accept invite member
 public/ private board
 get notification

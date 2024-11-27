@@ -77,17 +77,6 @@ const getAll = async (req, res, next) => {
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
   }
 }
-const search = async (req, res, next) => {
-  const correctCondition = Joi.object({
-    keyword: Joi.string().required()
-  })
-  try {
-    await correctCondition.validateAsync(req.query, { abortEarly: false })
-    next()
-  } catch (error) {
-    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
-  }
-}
 
 const deleteBoard = async (req, res, next) => {
   const correctCondition = Joi.object({
@@ -120,7 +109,6 @@ export const boardValidation = {
   moveCardToDifferentColumn,
   addMemberToBoard,
   getAll,
-  search,
   deleteBoard,
   updateTypeBoard
 }

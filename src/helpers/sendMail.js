@@ -1,17 +1,17 @@
 import nodemailer from 'nodemailer'
 import { env } from '~/config/environment'
 
-const renderTemplate = (username, url = '') => {
+const renderTemplate = (username, url = '', to, from, data) => {
   return `
-  <h1>Welcome to </h1>
-  <p>Hello, ${username} thank you for signing up!</p>
-  <p>We hope you enjoy using our platform.</p>
-  <p>Please click on the link below to accpect invitation:</p>
-  <a href="${env.FRONTEND_URL}/${url}">Accept Invitation</a>
+  <h1>Welcome to NTTU Workspace</h1>
+  <p>Hello, ${to}</p>
+  <p>${from} invited you to join a board</p>
+  <p>Please click on the link below to accepted invitation:</p>
+  <a href="${env.FRONTEND_URL}/${url}?boardId=${data?.boardId}&status=${data?.status}">Accept Invitation</a>
   `
 }
 
-const sendMail = async ({ from, to, subject, text, username, cc, bcc, url }) => {
+const sendMail = async ({ from, to, subject, text, username, cc, bcc, url, data }) => {
   try {
     let transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -28,7 +28,7 @@ const sendMail = async ({ from, to, subject, text, username, cc, bcc, url }) => 
       bcc, // Thêm BCC (nếu có)
       subject,
       text,
-      html: renderTemplate(username, url) // Gửi HTML content nếu có
+      html: renderTemplate(username, url, to, from, data) // Gửi HTML content nếu có
     }
     await transporter.sendMail(mailOptions)
   } catch (error) {

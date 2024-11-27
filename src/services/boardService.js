@@ -8,6 +8,7 @@ import { columnModel } from '~/models/columnModel'
 import ApiError from '~/utils/ApiError'
 import { slugify } from '~/utils/formatters'
 import { notificationService } from './notificationService'
+import { NOTIFICATION_INVITATION_STATUS } from '~/utils/constants'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
@@ -117,13 +118,19 @@ const addMemberToBoard = async (boardId, memberGmails) => {
       memberGmails.map((email) =>
         sendMail({
           to: email,
+          from: board.ownerId,
           subject: 'You are invited to join a Trello board!',
-          username: email
+          url: 'accept-invitation',
+          username: email,
+          data: {
+            boardId,
+            status: NOTIFICATION_INVITATION_STATUS.ACCEPTED
+          }
         })
       )
     )
 
-    const updatedBoard = await boardModel.addMemberToBoard(boardId, memberGmails, 'pending')
+    const updatedBoard = await boardModel.addMemberToBoard(boardId, memberGmails, NOTIFICATION_INVITATION_STATUS.PENDING)
 
     const invitation = {
       boardId,
@@ -152,11 +159,12 @@ const addMemberToBoard = async (boardId, memberGmails) => {
 
 const getAll = async (email) => {
   const boards = await boardModel.getAll(email)
-  return boards
+  const workspace = await boardModel.getWorkspace(email)
+  return { boards, workspace }
 }
 
-const search = async (keyword) => {
-  const boards = await boardModel.search(keyword)
+const searchBoard = async (keyword, email) => {
+  const boards = await boardModel.searchBoard(keyword, email)
   return boards
 }
 
@@ -177,7 +185,7 @@ export const boardService = {
   update,
   moveCardToDifferentColumn,
   addMemberToBoard,
-  search,
+  searchBoard,
   deleteBoard,
   updateTypeBoard
 }

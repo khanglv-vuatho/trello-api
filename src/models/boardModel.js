@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { GET_DB } from '~/config/mongodb'
-import { BOARD_TYPES } from '~/utils/constants'
+import { BOARD_TYPES, NOTIFICATION_INVITATION_STATUS } from '~/utils/constants'
 import { columnModel } from './columnModel'
 import { cardModel } from './cardModel'
 
@@ -50,7 +50,7 @@ const findOneById = async (boardId) => {
   }
 }
 
-const getDetails = async (boardId, email) => {
+const getDetails = async (boardId, email, isOwner = false) => {
   try {
     const db = await GET_DB()
     const result = await db
@@ -83,7 +83,7 @@ const getDetails = async (boardId, email) => {
 
     const memberGmails = result[0].memberGmails.map((member) => member.email)
     const ownerId = result[0].ownerId
-    if (memberGmails.includes(email) || ownerId === email) {
+    if (memberGmails.includes(email) || ownerId === email || isOwner) {
       return result[0] || null
     }
 
@@ -190,14 +190,24 @@ const getAll = async (email) => {
   }
 }
 
-const search = async (keyword) => {
+const searchBoard = async (keyword, email) => {
+  console.log({ keyword, email })
   try {
+    // Validate inputs
+    if (!keyword || !email) {
+      throw new Error('Keyword and email are required for search')
+    }
+
     const db = await GET_DB()
     const result = await db
       .collection(BOARD_COLLECTION_NAME)
       .aggregate([
         {
-          $match: { _destroy: false, searchVietnamese: { $regex: keyword, $options: 'i' } }
+          $match: {
+            _destroy: false,
+            searchVietnamese: { $regex: keyword, $options: 'i' },
+            $or: [{ ownerId: email }, { 'memberGmails.email': email }]
+          }
         }
       ])
       .toArray()
@@ -221,6 +231,19 @@ const updateTypeBoard = async (boardId, type) => {
   return result
 }
 
+const getWorkspace = async (email) => {
+  const db = await GET_DB()
+  const result = await db
+    .collection(BOARD_COLLECTION_NAME)
+    .find({
+      'memberGmails.email': email,
+      'memberGmails.status': NOTIFICATION_INVITATION_STATUS.ACCEPTED
+    })
+    .sort({ updateAt: -1 })
+    .toArray()
+  return result
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -232,7 +255,8 @@ export const boardModel = {
   pullColumnOrderIds,
   addMemberToBoard,
   getAll,
-  search,
+  searchBoard,
   deleteBoard,
-  updateTypeBoard
+  updateTypeBoard,
+  getWorkspace
 }

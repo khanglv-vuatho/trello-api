@@ -24,6 +24,6 @@ Router.route('/:id')
 
 Router.route('/:id/members').post(boardValidation.addMemberToBoard, boardController.addMemberToBoard)
 
-Router.route('/search').get(boardValidation.search, boardController.search)
+Router.route('/search-board').post(boardController.searchBoard)
 
 export const boardRouter = Router

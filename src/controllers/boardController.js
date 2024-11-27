@@ -81,10 +81,10 @@ const getAll = async (req, res, next) => {
   }
 }
 
-const search = async (req, res, next) => {
+const searchBoard = async (req, res, next) => {
   try {
-    const keyword = req.query.keyword
-    const boards = await boardService.search(keyword)
+    const { keyword, email } = req.body
+    const boards = await boardService.searchBoard(keyword, email)
     res.status(StatusCodes.OK).json(boards)
   } catch (error) {
     next(error)
@@ -119,7 +119,7 @@ export const boardController = {
   update,
   moveCardToDifferentColumn,
   addMemberToBoard,
-  search,
+  searchBoard,
   deleteBoard,
   updateTypeBoard
 }

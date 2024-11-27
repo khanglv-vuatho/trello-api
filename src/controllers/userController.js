@@ -2,6 +2,17 @@ import { StatusCodes } from 'http-status-codes'
 import { updateToken } from '~/helpers/jwt'
 import { userService } from '~/services/userService'
 
+const update = async (req, res, next) => {
+  try {
+    const { email } = req.params
+
+    const user = await userService.update(email, req.body)
+    res.status(StatusCodes.OK).json(user)
+  } catch (error) {
+    next(error)
+  }
+}
+
 const createNew = async (req, res, next) => {
   try {
     const token = updateToken({ ...req.body }, '1h')
@@ -43,5 +54,6 @@ const getMe = async (req, res, next) => {
 export const userController = {
   createNew,
   getDetails,
-  getMe
+  getMe,
+  update
 }

@@ -101,6 +101,19 @@ const deleteBoard = async (req, res, next) => {
   }
 }
 
+const updateTypeBoard = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    type: Joi.string().valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE).required(),
+    boardId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+  })
+  try {
+    await correctCondition.validateAsync(req.body, { abortEarly: false })
+    next()
+  } catch (error) {
+    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
+  }
+}
+
 export const boardValidation = {
   createNew,
   update,
@@ -108,5 +121,6 @@ export const boardValidation = {
   addMemberToBoard,
   getAll,
   search,
-  deleteBoard
+  deleteBoard,
+  updateTypeBoard
 }

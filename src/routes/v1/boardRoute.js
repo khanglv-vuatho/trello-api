@@ -15,6 +15,8 @@ Router.route('/get-all').get(boardValidation.getAll, boardController.getAll)
 
 Router.route('/supports/moving_card').put(boardValidation.moveCardToDifferentColumn, boardController.moveCardToDifferentColumn)
 
+Router.route('/:id/update-type-board').put(boardValidation.updateTypeBoard, boardController.updateTypeBoard)
+
 Router.route('/:id')
   .get(boardController.getDetails)
   .put(boardValidation.update, boardController.update)

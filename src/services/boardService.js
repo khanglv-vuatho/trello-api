@@ -29,10 +29,10 @@ const createNew = async (reqBody) => {
   }
 }
 
-const getDetails = async (boardId) => {
+const getDetails = async (boardId, email) => {
   // eslint-disable-next-line no-useless-catch
   try {
-    const board = await boardModel.getDetails(boardId)
+    const board = await boardModel.getDetails(boardId, email)
     if (!board) throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
 
     const resBoard = cloneDeep(board)
@@ -101,13 +101,13 @@ const addMemberToBoard = async (boardId, memberGmails) => {
     // check if board exists
     if (!board) throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
 
-    // check if owner is in memberGmails
-    if (board?.memberGmails?.includes(board.ownerId)) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, 'Owner cannot be added to the board')
-    }
     // check if memberGmails is in board.memberGmails
-    if (board?.memberGmails?.some((email) => memberGmails?.includes(email))) {
+    if (board?.memberGmails?.some((member) => memberGmails?.includes(member.email))) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'Member already exists')
+    }
+    // check if owner is in memberGmails
+    if (board?.memberGmails?.includes(board.memberGmails)) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Owner cannot be added to the board')
     }
 
     // send mail to member
@@ -163,6 +163,11 @@ const deleteBoard = async (boardId) => {
   return board
 }
 
+const updateTypeBoard = async (boardId, type) => {
+  const board = await boardModel.updateTypeBoard(boardId, type)
+  return board
+}
+
 export const boardService = {
   createNew,
   getAll,
@@ -171,5 +176,6 @@ export const boardService = {
   moveCardToDifferentColumn,
   addMemberToBoard,
   search,
-  deleteBoard
+  deleteBoard,
+  updateTypeBoard
 }

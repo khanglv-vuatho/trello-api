@@ -1,6 +1,4 @@
 import Joi from 'joi'
-import { ObjectId } from 'mongodb'
-import { GET_DB } from '~/config/mongodb'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 
 const CONVERSATION_COLLECTION_NAME = 'conversations'

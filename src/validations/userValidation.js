@@ -8,7 +8,6 @@ const createNew = async (req, res, next) => {
     verified_email: Joi.boolean().required(),
     name: Joi.string().required(),
     given_name: Joi.string().required(),
-    family_name: Joi.string().required(),
     picture: Joi.string().uri().required()
   })
   try {

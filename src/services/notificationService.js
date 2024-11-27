@@ -14,8 +14,20 @@ const getAll = async (ownerId) => {
   return notifications
 }
 
+const deleteOne = async (id) => {
+  const notification = await notificationModel.deleteOne(id)
+  return notification
+}
+
+const updateStatusInvitation = async (id, data) => {
+  const notification = await notificationModel.updateStatusInvitation(id, data)
+  return notification
+}
+
 export const notificationService = {
   createNew,
   findByOwnerId,
-  getAll
+  getAll,
+  deleteOne,
+  updateStatusInvitation
 }

@@ -1,6 +1,5 @@
 import { StatusCodes } from 'http-status-codes'
 import { boardService } from '~/services/boardService'
-import { notificationService } from '~/services/notificationService'
 import { userService } from '~/services/userService'
 
 const createNew = async (req, res, next) => {
@@ -17,8 +16,11 @@ const createNew = async (req, res, next) => {
 const getDetails = async (req, res, next) => {
   try {
     const boardId = req.params.id
+    const email = req.query.email
     // Điều hướng sang service
-    const board = await boardService.getDetails(boardId)
+    const board = await boardService.getDetails(boardId, email)
+
+    // update recent boards
     if (board?.memberGmails?.length >= 1) {
       const membersClone = await Promise.all(board?.memberGmails?.map((email) => userService.getDetails(email)))
       board.memberGmails = [...membersClone]
@@ -99,6 +101,17 @@ const deleteBoard = async (req, res, next) => {
   }
 }
 
+const updateTypeBoard = async (req, res, next) => {
+  try {
+    const boardId = req.params.id
+    const type = req.body.type
+    const board = await boardService.updateTypeBoard(boardId, type)
+    res.status(StatusCodes.OK).json(board)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const boardController = {
   createNew,
   getAll,
@@ -107,5 +120,6 @@ export const boardController = {
   moveCardToDifferentColumn,
   addMemberToBoard,
   search,
-  deleteBoard
+  deleteBoard,
+  updateTypeBoard
 }

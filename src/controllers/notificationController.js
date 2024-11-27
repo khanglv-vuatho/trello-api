@@ -11,6 +11,29 @@ const getAll = async (req, res, next) => {
   }
 }
 
+const deleteOne = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    await notificationService.deleteOne(id)
+    res.status(StatusCodes.OK).json({ message: 'Delete notification successfully' })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const updateStatusInvitation = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const data = req.body
+    await notificationService.updateStatusInvitation(id, data)
+    res.status(StatusCodes.OK).json({ message: 'Update notification successfully' })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const notificationController = {
-  getAll
+  getAll,
+  deleteOne,
+  updateStatusInvitation
 }

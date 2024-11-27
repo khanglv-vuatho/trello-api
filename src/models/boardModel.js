@@ -21,7 +21,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
-const INVALID_UPDATE_FIELDS = ['_id', 'updateAt']
+const INVALID_UPDATE_FIELDS = ['_id', 'createAt']
 
 const validateBeforeCreate = async (data) => {
   return await BOARD_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
@@ -50,7 +50,7 @@ const findOneById = async (boardId) => {
   }
 }
 
-const getDetails = async (boardId) => {
+const getDetails = async (boardId, email) => {
   try {
     const db = await GET_DB()
     const result = await db
@@ -79,9 +79,16 @@ const getDetails = async (boardId) => {
           }
         }
       ])
+      .sort({ updateAt: -1 })
       .toArray()
 
-    return result[0] || null
+    const memberGmails = result[0].memberGmails.map((member) => member.email)
+    const ownerId = result[0].ownerId
+    if (memberGmails.includes(email) || ownerId === email) {
+      return result[0] || null
+    }
+
+    throw new Error('You do not have permission to access this board')
   } catch (error) {
     throw new Error(error)
   }
@@ -209,6 +216,12 @@ const deleteBoard = async (boardId) => {
   return result
 }
 
+const updateTypeBoard = async (boardId, type) => {
+  const db = await GET_DB()
+  const result = await db.collection(BOARD_COLLECTION_NAME).findOneAndUpdate({ _id: new ObjectId(boardId) }, { $set: { type } }, { returnDocument: 'after' })
+  return result
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -221,5 +234,6 @@ export const boardModel = {
   addMemberToBoard,
   getAll,
   search,
-  deleteBoard
+  deleteBoard,
+  updateTypeBoard
 }

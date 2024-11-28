@@ -1,5 +1,7 @@
 import { userModel } from '~/models/userModel'
-
+import { deleteFile, uploadFile } from '~/worker'
+import { v4 as uuidv4 } from 'uuid'
+import { env } from '~/config/environment'
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
   try {
@@ -42,8 +44,17 @@ const getNotification = async (email) => {
   return notification
 }
 
-const update = async (email, reqBody) => {
-  const user = await userModel.update(email, reqBody)
+const update = async (email, reqBody, file) => {
+  const uuid = uuidv4()
+  const url = `${env.WORKER_API_URL}/${uuid}`
+  const userUpdate = await userModel.getDetails(email)
+  if (userUpdate?.picture?.includes(env.WORKER_API_URL)) {
+    await deleteFile(userUpdate.picture)
+  }
+  await uploadFile(url, file.buffer)
+  const reqBodyUpdate = { ...reqBody, picture: url }
+  const user = await userModel.update(email, reqBodyUpdate)
+
   return user
 }
 

@@ -9,5 +9,6 @@ export const env = {
   ADMIN_EMAIL_ADDRESS: process.env.ADMIN_EMAIL_ADDRESS,
   PASSWORD_SECRET_KEY: process.env.PASSWORD_SECRET_KEY,
   JWT_SECRET: process.env.JWT_SECRET,
-  FRONTEND_URL: process.env.FRONTEND_URL
+  FRONTEND_URL: process.env.FRONTEND_URL,
+  WORKER_API_URL: process.env.WORKER_API_URL
 }

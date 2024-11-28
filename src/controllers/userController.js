@@ -5,8 +5,8 @@ import { userService } from '~/services/userService'
 const update = async (req, res, next) => {
   try {
     const { email } = req.params
-
-    const user = await userService.update(email, req.body)
+    const file = req.file
+    const user = await userService.update(email, req.body, file)
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)

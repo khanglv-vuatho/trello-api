@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
-import { env } from '~/config/environment'
-import ApiError from '~/utils/ApiError'
+import { env } from '@/config/environment'
+import ApiError from '@/utils/ApiError'
 
 // Middleware for JWT authentication
 const authenticateJWT = (req, res, next) => {

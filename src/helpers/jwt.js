@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
-import { env } from '~/config/environment'
-import ApiError from '~/utils/ApiError'
+import { env } from '@/config/environment'
+import ApiError from '@/utils/ApiError'
 
 const generateToken = (user, tokenLife = '1h') => {
   const userData = createUserData(user)

@@ -1,14 +1,14 @@
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
-import { normalizeKeyword } from '~/helpers/normallize'
-import sendMail from '~/helpers/sendMail'
-import { boardModel } from '~/models/boardModel'
-import { cardModel } from '~/models/cardModel'
-import { columnModel } from '~/models/columnModel'
-import ApiError from '~/utils/ApiError'
-import { slugify } from '~/utils/formatters'
+import { normalizeKeyword } from '@/helpers/normallize'
+import sendMail from '@/helpers/sendMail'
+import { boardModel } from '@/models/boardModel'
+import { cardModel } from '@/models/cardModel'
+import { columnModel } from '@/models/columnModel'
+import ApiError from '@/utils/ApiError'
+import { slugify } from '@/utils/formatters'
 import { notificationService } from './notificationService'
-import { NOTIFICATION_INVITATION_STATUS, NOTIFICATION_STATUS, NOTIFICATION_TYPES } from '~/utils/constants'
+import { NOTIFICATION_INVITATION_STATUS, NOTIFICATION_STATUS, NOTIFICATION_TYPES } from '@/utils/constants'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch

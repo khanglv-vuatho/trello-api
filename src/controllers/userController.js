@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
-import { updateToken } from '~/helpers/jwt'
-import { userService } from '~/services/userService'
+import { updateToken } from '@/helpers/jwt'
+import { userService } from '@/services/userService'
 
 const update = async (req, res, next) => {
   try {

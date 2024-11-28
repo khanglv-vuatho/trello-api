@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
-import { GET_DB } from '~/config/mongodb'
-import { BOARD_TYPES, NOTIFICATION_INVITATION_STATUS } from '~/utils/constants'
+import { GET_DB } from '@/config/mongodb'
+import { BOARD_TYPES, NOTIFICATION_INVITATION_STATUS } from '@/utils/constants'
 import { columnModel } from './columnModel'
 import { cardModel } from './cardModel'
 

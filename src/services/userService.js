@@ -1,7 +1,7 @@
-import { userModel } from '~/models/userModel'
-import { deleteFile, uploadFile } from '~/worker'
+import { userModel } from '@/models/userModel'
+import { deleteFile, uploadFile } from '@/worker'
 import { v4 as uuidv4 } from 'uuid'
-import { env } from '~/config/environment'
+import { env } from '@/config/environment'
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
   try {

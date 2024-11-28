@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { GET_DB } from '~/config/mongodb'
+import { GET_DB } from '@/config/mongodb'
 
 const USER_COLLECTION_NAME = 'users'
 const USER_COLLECTION_SCHEMA = Joi.object({

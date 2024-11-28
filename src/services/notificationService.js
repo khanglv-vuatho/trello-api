@@ -1,5 +1,5 @@
-import { boardModel } from '~/models/boardModel'
-import { notificationModel } from '~/models/notificationModel'
+import { boardModel } from '@/models/boardModel'
+import { notificationModel } from '@/models/notificationModel'
 
 const createNew = async (data) => {
   // eslint-disable-next-line no-useless-catch

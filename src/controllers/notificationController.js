@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes'
-import { notificationService } from '~/services/notificationService'
+import { notificationService } from '@/services/notificationService'
 
 const getAll = async (req, res, next) => {
   try {

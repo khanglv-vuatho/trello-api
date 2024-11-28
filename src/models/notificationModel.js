@@ -1,8 +1,8 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
-import { GET_DB } from '~/config/mongodb'
-import { NOTIFICATION_STATUS, NOTIFICATION_TYPES } from '~/utils/constants'
-import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
+import { GET_DB } from '@/config/mongodb'
+import { NOTIFICATION_STATUS, NOTIFICATION_TYPES } from '@/utils/constants'
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '@/utils/validators'
 
 const NOTIFICATION_COLLECTION_NAME = 'notifications'
 const NOTIFICATION_COLLECTION_SCHEMA = Joi.object({

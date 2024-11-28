@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
-import { cardModel } from '~/models/cardModel'
-import { columnModel } from '~/models/columnModel'
-import ApiError from '~/utils/ApiError'
+import { cardModel } from '@/models/cardModel'
+import { columnModel } from '@/models/columnModel'
+import ApiError from '@/utils/ApiError'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch

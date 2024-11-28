@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
-import ApiError from '~/utils/ApiError'
+import ApiError from '@/utils/ApiError'
 
 const getAll = async (req, res, next) => {
   const correctCondition = Joi.object({

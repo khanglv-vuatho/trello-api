@@ -1,6 +1,6 @@
 import express from 'express'
-import { columnController } from '~/controllers/columnController'
-import { columnValidation } from '~/validations/columnValidation'
+import { columnController } from '@/controllers/columnController'
+import { columnValidation } from '@/validations/columnValidation'
 
 const Router = express.Router()
 

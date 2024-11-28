@@ -8,7 +8,7 @@ import { columnModel } from '~/models/columnModel'
 import ApiError from '~/utils/ApiError'
 import { slugify } from '~/utils/formatters'
 import { notificationService } from './notificationService'
-import { NOTIFICATION_INVITATION_STATUS } from '~/utils/constants'
+import { NOTIFICATION_INVITATION_STATUS, NOTIFICATION_STATUS, NOTIFICATION_TYPES } from '~/utils/constants'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
@@ -41,9 +41,6 @@ const getDetails = async (boardId, email) => {
       //equals because typeof _id is ObjectId so convert to String or using equals to compare
       column.cards = resBoard.cards.filter((card) => card.columnId.equals(column._id))
     })
-
-    delete resBoard.cards
-
     // update updateAt field
     await boardModel.update(boardId, { updateAt: Date.now() })
 
@@ -143,8 +140,8 @@ const addMemberToBoard = async (boardId, memberGmails) => {
         notificationService.createNew({
           ownerId: email,
           authorId: board.ownerId,
-          status: 'unread',
-          type: 'invite',
+          status: NOTIFICATION_STATUS.UNREAD,
+          type: NOTIFICATION_TYPES.INVITE,
           title: `You are invited to join a board ${updatedBoard.title}!`,
           invitation
         })

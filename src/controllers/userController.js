@@ -15,7 +15,7 @@ const update = async (req, res, next) => {
 
 const createNew = async (req, res, next) => {
   try {
-    const token = updateToken({ ...req.body }, '1h')
+    const token = updateToken({ ...req.body }, '24h')
 
     const payload = { ...req.body, token }
     // Điều hướng sang service

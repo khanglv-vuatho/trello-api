@@ -11,20 +11,27 @@ check if exit user of memberGmails and isOwner throw error => done
 delete board => done
 update stared => done
 recent board => done
+get notification => done
+push notification => done
+add workspace when accept invite member => done
+recenet board open => done
+detail user => done
 
 Todo:
-add workspace when accept invite member => done
-public/ private board
+public/ private board 
 check title when user create board update board 
-get notification
-push notification 
 search boards
-recenet board open
-detail user
 detail of card
 socket to notification
 accept invite from email to join a board
 private/public board (url public and private)
 jwt
 comment card
+
+
+// chat 
+get chat
+send chat
+delete chat
+
 

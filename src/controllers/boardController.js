@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import { boardService } from '@/services/boardService'
 import { userService } from '@/services/userService'
+import { NOTIFICATION_INVITATION_STATUS } from '@/utils/constants'
 
 const createNew = async (req, res, next) => {
   try {
@@ -22,8 +23,15 @@ const getDetails = async (req, res, next) => {
 
     // get member details
     if (board?.memberGmails?.length >= 1) {
-      const membersClone = await Promise.all(board?.memberGmails?.map((email) => userService.getDetails(email)))
-      board.memberGmails = [...membersClone]
+      const membersClone = await Promise.all(
+        board.memberGmails.map(async (member) => {
+          if (member.status === NOTIFICATION_INVITATION_STATUS.ACCEPTED) {
+            return await userService.getDetails(member.email)
+          }
+          return member
+        })
+      )
+      board.memberGmails = membersClone
     }
 
     res.status(StatusCodes.OK).json(board)

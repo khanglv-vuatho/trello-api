@@ -51,8 +51,12 @@ const update = async (email, reqBody, file) => {
   if (userUpdate?.picture?.includes(env.WORKER_API_URL)) {
     await deleteFile(userUpdate.picture)
   }
-  await uploadFile(url, file.buffer)
-  const reqBodyUpdate = { ...reqBody, picture: url }
+  // upload file if provided
+  if (file) {
+    await uploadFile(url, file?.buffer)
+  }
+  // update user with new data
+  const reqBodyUpdate = file ? { ...reqBody, picture: url } : { ...reqBody }
   const user = await userModel.update(email, reqBodyUpdate)
 
   return user

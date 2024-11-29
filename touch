@@ -13,9 +13,9 @@ update stared => done
 recent board => done
 
 Todo:
-check title when user create board update board 
-add workspace when accept invite member
+add workspace when accept invite member => done
 public/ private board
+check title when user create board update board 
 get notification
 push notification 
 search boards

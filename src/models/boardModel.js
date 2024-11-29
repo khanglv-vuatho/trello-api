@@ -7,8 +7,8 @@ import { cardModel } from './cardModel'
 
 const BOARD_COLLECTION_NAME = 'boards'
 const BOARD_COLLECTION_SCHEMA = Joi.object({
-  title: Joi.string().required().min(3).max(50).trim().strict(),
-  searchVietnamese: Joi.string().required().min(3).max(50).trim().strict(),
+  title: Joi.string().required().min(3).max(30).trim().strict(),
+  searchVietnamese: Joi.string().required().min(3).max(30).trim().strict(),
   slug: Joi.string().required().min(3).trim().strict(),
   ownerId: Joi.string().required().min(3).max(50).trim().strict().email(),
   columnOrderIds: Joi.array().items(Joi.string()).default([]),

@@ -174,6 +174,10 @@ const updateTypeBoard = async (boardId, type) => {
   const board = await boardModel.updateTypeBoard(boardId, type)
   return board
 }
+const deleteMemberFromBoard = async (boardId, email) => {
+  const board = await boardModel.deleteMemberFromBoard(boardId, email)
+  return board
+}
 
 export const boardService = {
   createNew,
@@ -184,5 +188,6 @@ export const boardService = {
   addMemberToBoard,
   searchBoard,
   deleteBoard,
-  updateTypeBoard
+  updateTypeBoard,
+  deleteMemberFromBoard
 }

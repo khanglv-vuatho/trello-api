@@ -7,3 +7,5 @@ export const NOTIFICATION_TYPES = { INVITE: 'invite' }
 export const NOTIFICATION_INVITATION_STATUS = { PENDING: 'pending', ACCEPTED: 'accepted', REMOVED: 'removed' }
 
 export const NOTIFICATION_STATUS = { UNREAD: 'unread', READ: 'read' }
+
+export const MESSAGE_TYPES = { TEXT: 'text', IMAGE: 'image' }

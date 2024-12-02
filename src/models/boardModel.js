@@ -244,6 +244,15 @@ const getWorkspace = async (email) => {
   return result
 }
 
+const deleteMemberFromBoard = async (boardId, email) => {
+  const db = await GET_DB()
+  console.log({ boardId, email })
+  const result = await db
+    .collection(BOARD_COLLECTION_NAME)
+    .findOneAndUpdate({ _id: new ObjectId(boardId) }, { $pull: { memberGmails: { email } } }, { returnDocument: 'after' })
+  return result
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -258,5 +267,6 @@ export const boardModel = {
   searchBoard,
   deleteBoard,
   updateTypeBoard,
-  getWorkspace
+  getWorkspace,
+  deleteMemberFromBoard
 }

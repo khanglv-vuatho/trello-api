@@ -5,7 +5,7 @@ import { cardRouter } from './cardRouter'
 import { columnRouter } from './columnRouter'
 import { userRouter } from './userRoute'
 import { notificationRouter } from './notificationRoute'
-
+import { conversationRouter } from './conversation'
 const Router = express.Router()
 
 // Public routes (no authentication needed)
@@ -33,5 +33,6 @@ Router.use('/cards', cardRouter)
 Router.use('/columns', columnRouter)
 Router.use('/users', userRouter)
 Router.use('/notifications', notificationRouter)
+Router.use('/conversations', conversationRouter)
 
 export const APIs_V1 = Router

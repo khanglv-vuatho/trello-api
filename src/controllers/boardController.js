@@ -14,29 +14,46 @@ const createNew = async (req, res, next) => {
     next(error)
   }
 }
+
 const getDetails = async (req, res, next) => {
   try {
     const boardId = req.params.id
     const email = req.query.email
     // Điều hướng sang service
     const board = await boardService.getDetails(boardId, email)
-
+    console.log(board)
+    const ownerDetails = {
+      email: board.ownerId,
+      status: NOTIFICATION_INVITATION_STATUS.ACCEPTED
+    }
     // get member details
-    if (board?.memberGmails?.length >= 1) {
-      const membersClone = await Promise.all(
-        board.memberGmails.map(async (member) => {
-          if (member.status === NOTIFICATION_INVITATION_STATUS.ACCEPTED) {
-            return await userService.getDetails(member.email)
-          }
-          return member
-        })
+    if (board?.memberGmails?.length > 0) {
+      board.memberGmails = await Promise.all(
+        [ownerDetails, ...board.memberGmails]
+          .filter((member) => member.email !== email)
+          .map(async (member) => {
+            if (member.status === NOTIFICATION_INVITATION_STATUS.ACCEPTED || member.email === email) {
+              return await userService.getDetails(member.email)
+            }
+            return member
+          })
       )
-      board.memberGmails = membersClone
     }
 
     res.status(StatusCodes.OK).json(board)
   } catch (error) {
     //next(error) để đẩy sang errorhandling
+    next(error)
+  }
+}
+
+const deleteMemberFromBoard = async (req, res, next) => {
+  try {
+    const boardId = req.params.id
+    const email = req.body.email
+    const board = await boardService.deleteMemberFromBoard(boardId, email)
+    res.status(StatusCodes.OK).json(board)
+  } catch (error) {
     next(error)
   }
 }
@@ -129,5 +146,6 @@ export const boardController = {
   addMemberToBoard,
   searchBoard,
   deleteBoard,
-  updateTypeBoard
+  updateTypeBoard,
+  deleteMemberFromBoard
 }

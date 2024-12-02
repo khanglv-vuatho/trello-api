@@ -22,7 +22,9 @@ Router.route('/:id')
   .put(boardValidation.update, boardController.update)
   .delete(boardValidation.deleteBoard, boardController.deleteBoard)
 
-Router.route('/:id/members').post(boardValidation.addMemberToBoard, boardController.addMemberToBoard)
+Router.route('/:id/members')
+  .post(boardValidation.addMemberToBoard, boardController.addMemberToBoard)
+  .delete(boardValidation.deleteMemberFromBoard, boardController.deleteMemberFromBoard)
 
 Router.route('/search-board').post(boardController.searchBoard)
 

@@ -30,8 +30,6 @@ const createNew = async (req, res, next) => {
     //   await uploadFile(url, file?.buffer)
     // }
 
-    console.log({ content })
-
     // Create a new message
     const newMessage = await messageModel.createNew(content, type)
 

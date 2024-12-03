@@ -32,7 +32,6 @@ const createNew = async (req, res, next) => {
 
 const getDetails = async (req, res, next) => {
   try {
-    console.log({ email: req.params.email })
     const notification = await userService.getNotification(req.params.email)
     const user = await userService.getDetails(req.params.email)
     res.status(StatusCodes.OK).json({ user, notification })

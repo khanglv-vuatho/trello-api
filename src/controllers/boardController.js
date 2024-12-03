@@ -21,7 +21,6 @@ const getDetails = async (req, res, next) => {
     const email = req.query.email
     // Điều hướng sang service
     const board = await boardService.getDetails(boardId, email)
-    console.log(board)
     const ownerDetails = {
       email: board.ownerId,
       status: NOTIFICATION_INVITATION_STATUS.ACCEPTED

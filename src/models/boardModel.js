@@ -191,7 +191,6 @@ const getAll = async (email) => {
 }
 
 const searchBoard = async (keyword, email) => {
-  console.log({ keyword, email })
   try {
     // Validate inputs
     if (!keyword || !email) {
@@ -246,7 +245,6 @@ const getWorkspace = async (email) => {
 
 const deleteMemberFromBoard = async (boardId, email) => {
   const db = await GET_DB()
-  console.log({ boardId, email })
   const result = await db
     .collection(BOARD_COLLECTION_NAME)
     .findOneAndUpdate({ _id: new ObjectId(boardId) }, { $pull: { memberGmails: { email } } }, { returnDocument: 'after' })

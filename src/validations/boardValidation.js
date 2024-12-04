@@ -13,7 +13,7 @@ const createNew = async (req, res, next) => {
   })
   try {
     // set abortEarly: false trả ra nhiều lỗi validation nếu có
-    await correctCondition.validateAsync(req.body, { abortEarly: false })
+    await correctCondition.validateAsync(req.body, { abortEarly: false, allowUnknown: true })
     next()
   } catch (error) {
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
@@ -66,17 +66,17 @@ const addMemberToBoard = async (req, res, next) => {
   }
 }
 
-const getAll = async (req, res, next) => {
-  const correctCondition = Joi.object({
-    email: Joi.string().required().email()
-  })
-  try {
-    await correctCondition.validateAsync(req.query, { abortEarly: false })
-    next()
-  } catch (error) {
-    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
-  }
-}
+// const getAll = async (req, res, next) => {
+//   const correctCondition = Joi.object({
+//     email: Joi.string().required().email()
+//   })
+//   try {
+//     await correctCondition.validateAsync(req.query, { abortEarly: false })
+//     next()
+//   } catch (error) {
+//     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
+//   }
+// }
 
 const deleteBoard = async (req, res, next) => {
   const correctCondition = Joi.object({
@@ -120,7 +120,7 @@ export const boardValidation = {
   update,
   moveCardToDifferentColumn,
   addMemberToBoard,
-  getAll,
+  // getAll,
   deleteBoard,
   updateTypeBoard,
   deleteMemberFromBoard

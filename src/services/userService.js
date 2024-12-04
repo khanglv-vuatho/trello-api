@@ -2,12 +2,18 @@ import { userModel } from '@/models/userModel'
 import { deleteFile, uploadFile } from '@/worker'
 import { v4 as uuidv4 } from 'uuid'
 import { env } from '@/config/environment'
+import { createToken } from '@/helpers/jwt'
+
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
   try {
+    const accessToken = createToken(reqBody, '24h')
+
     const newUser = {
-      ...reqBody
+      ...reqBody,
+      access_token: accessToken
     }
+
     //check if user already exists
     const user = await userModel.getDetails(newUser.email)
     if (user) return user

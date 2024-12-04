@@ -19,8 +19,6 @@ const NOTIFICATION_COLLECTION_SCHEMA = Joi.object({
   }).required()
 })
 
-const INVALID_UPDATE_FIELDS = ['_id', 'createdAt']
-
 const validateBeforeCreate = async (data) => {
   return await NOTIFICATION_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
 }

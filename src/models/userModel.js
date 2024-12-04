@@ -10,7 +10,10 @@ const USER_COLLECTION_SCHEMA = Joi.object({
   name: Joi.string().required(),
   given_name: Joi.string().required(),
   picture: Joi.string().uri().required(),
-  displayName: Joi.string().default(Joi.ref('name'))
+  displayName: Joi.string().default(Joi.ref('name')),
+  // google token
+  token: Joi.string().default(null),
+  access_token: Joi.string().default(null)
 })
 
 const checkIfUserExists = async (email) => {

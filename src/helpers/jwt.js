@@ -4,24 +4,17 @@ import { env } from '@/config/environment'
 import ApiError from '@/utils/ApiError'
 
 const generateToken = (user, tokenLife = '1h') => {
-  const userData = createUserData(user)
-  return jwt.sign({ data: userData }, env.JWT_SECRET, {
+  return jwt.sign(user, env.JWT_SECRET, {
     algorithm: 'HS256',
     expiresIn: tokenLife
   })
 }
 
-const INVALID_UPDATE_FIELDS = ['_id', 'email']
-
-// Helper function to create user data for the token
-const createUserData = (user) => {
-  if (!user) return {}
-  return Object.keys(user).reduce((acc, field) => {
-    if (!INVALID_UPDATE_FIELDS.includes(field)) {
-      acc[field] = user[field]
-    }
-    return acc
-  }, {})
+const createToken = (user, tokenLife = '24h') => {
+  return jwt.sign(user, env.JWT_SECRET, {
+    algorithm: 'HS256',
+    expiresIn: tokenLife
+  })
 }
 
 const verifyToken = (token) => {
@@ -33,11 +26,10 @@ const verifyToken = (token) => {
 }
 
 const updateToken = (user, tokenLife) => {
-  const userData = createUserData(user)
-  return jwt.sign({ data: userData }, env.JWT_SECRET, {
+  return jwt.sign(user, env.JWT_SECRET, {
     algorithm: 'HS256',
     expiresIn: tokenLife
   })
 }
 
-export { generateToken, verifyToken, updateToken }
+export { generateToken, verifyToken, updateToken, createToken }

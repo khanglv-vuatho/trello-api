@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { GET_DB } from '@/config/mongodb'
-import { BOARD_TYPES, NOTIFICATION_INVITATION_STATUS } from '@/utils/constants'
+import { BOARD_MEMBER_ROLE, BOARD_TYPES, MEMBER_STATUS, NOTIFICATION_INVITATION_STATUS } from '@/utils/constants'
 import { columnModel } from './columnModel'
 import { cardModel } from './cardModel'
 
@@ -17,7 +17,23 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
     .timestamp('javascript')
     .default(() => new Date()),
   updateAt: Joi.date().timestamp('javascript').default(null),
-  memberGmails: Joi.array().items(Joi.string()).default([]),
+  memberGmails: Joi.array()
+    .items(
+      Joi.object({
+        email: Joi.string().required().email().trim().strict(),
+        status: Joi.string().valid(MEMBER_STATUS.PENDING, MEMBER_STATUS.ACCEPTED).default(MEMBER_STATUS.PENDING),
+        role: Joi.string().valid(BOARD_MEMBER_ROLE.MEMBER, BOARD_MEMBER_ROLE.OWNER).default(BOARD_MEMBER_ROLE.MEMBER)
+      })
+    )
+    .default([]),
+  permissions: Joi.object({
+    viewBoard: Joi.array().items(Joi.string()).default([BOARD_MEMBER_ROLE.MEMBER, BOARD_MEMBER_ROLE.OWNER]), // Xem board
+    editBoard: Joi.array().items(Joi.string()).default([BOARD_MEMBER_ROLE.MEMBER, BOARD_MEMBER_ROLE.OWNER]), // Chỉnh sửa board
+    deleteBoard: Joi.array().items(Joi.string()).default([BOARD_MEMBER_ROLE.OWNER]), // Xóa board
+    inviteMember: Joi.array().items(Joi.string()).default([BOARD_MEMBER_ROLE.OWNER]), // Mời thành viên
+    deleteMember: Joi.array().items(Joi.string()).default([BOARD_MEMBER_ROLE.OWNER]), // Xóa thành viên
+    starBoard: Joi.array().items(Joi.string()).default([BOARD_MEMBER_ROLE.MEMBER, BOARD_MEMBER_ROLE.OWNER]) // Đánh sao cho board
+  }).default(),
   _destroy: Joi.boolean().default(false)
 })
 
@@ -81,9 +97,9 @@ const getDetails = async (boardId, email, isOwner = false) => {
       ])
       .toArray()
 
-    const memberGmails = result[0].memberGmails.map((member) => member.email)
-    const ownerId = result[0].ownerId
-    if (memberGmails.includes(email) || ownerId === email || isOwner) {
+    const memberGmails = result[0]?.memberGmails?.map((member) => member?.email)
+    const ownerId = result[0]?.ownerId
+    if (memberGmails?.includes(email) || ownerId === email || isOwner) {
       return result[0] || null
     }
 
@@ -119,7 +135,6 @@ const update = async (boardId, updateData) => {
     })
 
     // xử lí string để objectId
-
     if (updateData.columnOrderIds) {
       updateData.columnOrderIds = updateData.columnOrderIds.map((columnId) => new ObjectId(columnId))
     }
@@ -166,7 +181,9 @@ const addMemberToBoard = async (boardId, memberGmails, status) => {
           memberGmails: {
             $each: memberGmails.map((email) => ({
               email,
-              status
+              status,
+              // default role is member
+              role: BOARD_MEMBER_ROLE.MEMBER
             }))
           }
         }

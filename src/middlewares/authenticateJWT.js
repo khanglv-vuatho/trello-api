@@ -14,13 +14,13 @@ const authenticateJWT = (req, res, next) => {
 
   // Token is typically in the format: 'Bearer <token>'
   const token = authHeader.split(' ')[1]
+  // console.log({ token })
 
   // Verify and decode the token
   jwt.verify(token, env.JWT_SECRET, (err, user) => {
-    if (err) {
-      throw new ApiError(StatusCodes.FORBIDDEN, 'Invalid token') // Invalid token
-    }
-
+    // if (err) {
+    //   throw new ApiError(StatusCodes.FORBIDDEN, 'Invalid token') // Invalid token
+    // }
     // If the token is valid, save user information to req.user
     req.user = user // Store user info in request object
     next() // Proceed to the next middleware or route handler

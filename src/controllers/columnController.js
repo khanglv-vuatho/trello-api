@@ -24,6 +24,7 @@ const update = async (req, res, next) => {
     next(error)
   }
 }
+
 const deleteColumn = async (req, res, next) => {
   try {
     const columnId = req.params.id

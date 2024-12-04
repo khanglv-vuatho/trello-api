@@ -2,6 +2,7 @@ import express from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { boardController } from '@/controllers/boardController'
 import { boardValidation } from '@/validations/boardValidation'
+import { checkPermission } from '@/middlewares/checkPermission'
 
 const Router = express.Router()
 
@@ -11,7 +12,7 @@ Router.route('/')
   })
   .post(boardValidation.createNew, boardController.createNew)
 
-Router.route('/get-all').get(boardValidation.getAll, boardController.getAll)
+Router.route('/get-all').get(boardController.getAll)
 
 Router.route('/supports/moving_card').put(boardValidation.moveCardToDifferentColumn, boardController.moveCardToDifferentColumn)
 
@@ -23,8 +24,8 @@ Router.route('/:id')
   .delete(boardValidation.deleteBoard, boardController.deleteBoard)
 
 Router.route('/:id/members')
-  .post(boardValidation.addMemberToBoard, boardController.addMemberToBoard)
-  .delete(boardValidation.deleteMemberFromBoard, boardController.deleteMemberFromBoard)
+  .post(boardValidation.addMemberToBoard, checkPermission('inviteMember'), boardController.addMemberToBoard)
+  .delete(boardValidation.deleteMemberFromBoard, checkPermission('deleteMember'), boardController.deleteMemberFromBoard)
 
 Router.route('/search-board').post(boardController.searchBoard)
 

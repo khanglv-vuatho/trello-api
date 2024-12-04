@@ -17,8 +17,9 @@ const createNew = async (req, res, next) => {
 
 const getDetails = async (req, res, next) => {
   try {
+    const { user } = req
     const boardId = req.params.id
-    const email = req.query.email
+    const email = user.email
     // Điều hướng sang service
     const board = await boardService.getDetails(boardId, email)
     const ownerDetails = {
@@ -32,7 +33,9 @@ const getDetails = async (req, res, next) => {
           .filter((member) => member.email !== email)
           .map(async (member) => {
             if (member.status === NOTIFICATION_INVITATION_STATUS.ACCEPTED || member.email === email) {
-              return await userService.getDetails(member.email)
+              const user = await userService.getDetails(member.email)
+              user.role = member.role
+              return user
             }
             return member
           })
@@ -97,7 +100,8 @@ const addMemberToBoard = async (req, res, next) => {
 
 const getAll = async (req, res, next) => {
   try {
-    const email = req.query.email
+    const { user } = req
+    const email = user.email
     const boards = await boardService.getAll(email)
     res.status(StatusCodes.OK).json(boards)
   } catch (error) {

@@ -8,7 +8,8 @@ import { columnModel } from '@/models/columnModel'
 import ApiError from '@/utils/ApiError'
 import { slugify } from '@/utils/formatters'
 import { notificationService } from './notificationService'
-import { NOTIFICATION_INVITATION_STATUS, NOTIFICATION_STATUS, NOTIFICATION_TYPES } from '@/utils/constants'
+import { NOTIFICATION_INVITATION_STATUS, NOTIFICATION_STATUS, NOTIFICATION_TYPES, SOCKET_EVENTS } from '@/utils/constants'
+import { getIO, sendDataSocketToClient, sendDataSocketToGroupClient } from '@/sockets'
 
 const createNew = async (reqBody) => {
   // eslint-disable-next-line no-useless-catch
@@ -135,17 +136,30 @@ const addMemberToBoard = async (boardId, memberGmails) => {
       status: 'pending'
     }
 
+    const renderPayload = (email) => {
+      return {
+        ownerId: email,
+        authorId: board.ownerId,
+        status: NOTIFICATION_STATUS.UNREAD,
+        type: NOTIFICATION_TYPES.INVITE,
+        title: `You are invited to join a board ${updatedBoard.title}!`,
+        invitation
+      }
+    }
+
+    //handle notification and socket
     await Promise.all(
-      memberGmails.map((email) =>
-        notificationService.createNew({
-          ownerId: email,
-          authorId: board.ownerId,
-          status: NOTIFICATION_STATUS.UNREAD,
-          type: NOTIFICATION_TYPES.INVITE,
-          title: `You are invited to join a board ${updatedBoard.title}!`,
-          invitation
-        })
-      )
+      memberGmails.map(async (email) => {
+        const payload = renderPayload(email)
+        await notificationService.createNew(payload)
+        sendDataSocketToClient(email, payload)
+      })
+    )
+    //handle socket
+    sendDataSocketToGroupClient(
+      board?.memberGmails.map((member) => member.email),
+      SOCKET_EVENTS.UPDATE_MEMBER,
+      updatedBoard
     )
 
     return updatedBoard

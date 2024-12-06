@@ -14,8 +14,6 @@ export const checkPermission = (action) => async (req, res, next) => {
     }
     // Get board details from service layer
     const board = await boardService.getDetails(boardId, email)
-
-    console.log({ board })
     if (!board || board._destroy) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found or deleted')
     }
@@ -33,10 +31,8 @@ export const checkPermission = (action) => async (req, res, next) => {
     if ((!member || member.status !== MEMBER_STATUS.ACCEPTED) && !isOwner) {
       throw new ApiError(StatusCodes.FORBIDDEN, 'Access denied: Not an accepted member of this board')
     }
-    console.log({ member, action, permissions: board.permissions })
     // Check permissions for the requested action
     const allowedRoles = board.permissions?.[action] || []
-    console.log({ allowedRoles })
     if (!allowedRoles?.includes(member?.role) && !isOwner) {
       throw new ApiError(StatusCodes.FORBIDDEN, `Access denied: You need ${allowedRoles.join(' or ')} permission`)
     }

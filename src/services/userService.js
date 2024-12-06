@@ -18,9 +18,11 @@ const createNew = async (reqBody) => {
     const user = await userModel.getDetails(newUser.email)
     if (user) return user
 
-    const createdUser = await userModel.createNew(newUser)
-    const dataUser = await userModel.getDetails(createdUser.email)
-    return dataUser
+    //create new user to db
+    await userModel.createNew(newUser)
+    // const dataUser = await userModel.getDetails(createdUser.email)
+    // console.log({ dataUser, createdUser })
+    return newUser
   } catch (error) {
     throw error
   }

@@ -26,5 +26,29 @@ export const DEFAULT_BOARD_PERMISSIONS = {
   deleteBoard: [BOARD_MEMBER_ROLE.OWNER],
   inviteMember: [BOARD_MEMBER_ROLE.OWNER],
   deleteMember: [BOARD_MEMBER_ROLE.OWNER],
-  starBoard: [BOARD_MEMBER_ROLE.MEMBER, BOARD_MEMBER_ROLE.OWNER]
+  starBoard: [BOARD_MEMBER_ROLE.MEMBER, BOARD_MEMBER_ROLE.OWNER],
+  updateTypeBoard: [BOARD_MEMBER_ROLE.OWNER],
+  updateRole: [BOARD_MEMBER_ROLE.OWNER]
+}
+
+export const boardPermission = {
+  viewBoard: 'viewBoard',
+  editBoard: 'editBoard',
+  deleteBoard: 'deleteBoard',
+  inviteMember: 'inviteMember',
+  deleteMember: 'deleteMember',
+  starBoard: 'starBoard',
+  updateTypeBoard: 'updateTypeBoard',
+  updateRole: 'updateRole'
+}
+
+export const SOCKET_EVENTS = {
+  REGISTER: 'register',
+  JOIN_BOARD: 'join-board',
+  NOTIFICATION: 'notification',
+  DISCONNECT: 'disconnect',
+  UPDATE_BOARD: 'updateBoard',
+  UPDATE_COLUMN: 'updateColumn',
+  UPDATE_CARD: 'updateCard',
+  UPDATE_MEMBER: 'updateMember'
 }

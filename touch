@@ -16,17 +16,25 @@ push notification => done
 add workspace when accept invite member => done
 recenet board open => done
 detail user => done
+jwt => done
 
-Todo:
-public/ private board 
-check title when user create board update board 
+Todo:        
+socket to notification
+accept invite from email to join a board => done
+public/ private board
+check title when user create board update board
 search boards
 detail of card
-socket to notification
-accept invite from email to join a board
 private/public board (url public and private)
-jwt
 comment card
+
+//socket:
+socket to notification
+socket to invite member
+socket to update board
+socket to update column
+socket to delete card
+socket to delete member
 
 
 // chat 

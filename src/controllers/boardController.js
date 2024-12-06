@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import { boardService } from '@/services/boardService'
 import { userService } from '@/services/userService'
-import { NOTIFICATION_INVITATION_STATUS } from '@/utils/constants'
+import { BOARD_MEMBER_ROLE, NOTIFICATION_INVITATION_STATUS } from '@/utils/constants'
 
 const createNew = async (req, res, next) => {
   try {
@@ -24,7 +24,8 @@ const getDetails = async (req, res, next) => {
     const board = await boardService.getDetails(boardId, email)
     const ownerDetails = {
       email: board.ownerId,
-      status: NOTIFICATION_INVITATION_STATUS.ACCEPTED
+      status: NOTIFICATION_INVITATION_STATUS.ACCEPTED,
+      role: BOARD_MEMBER_ROLE.OWNER
     }
     // get member details
     if (board?.memberGmails?.length > 0) {

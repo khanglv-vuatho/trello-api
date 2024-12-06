@@ -29,9 +29,16 @@ const createNew = async (req, res, next) => {
 
 const getDetails = async (req, res, next) => {
   try {
-    const notification = await userService.getNotification(req.params.email)
-    const user = await userService.getDetails(req.params.email)
-    res.status(StatusCodes.OK).json({ user, notification })
+    // const { user: userAuth } = req
+
+    const { email } = req.params
+    // const isOwner = userAuth.email === email
+    const user = await userService.getDetails(email)
+
+    delete user.access_token
+    // if (!isOwner) return res.status(StatusCodes.OK).json(user)
+    // const notification = await userService.getNotification(email)
+    res.status(StatusCodes.OK).json({ user })
   } catch (error) {
     next(error)
   }

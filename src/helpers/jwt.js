@@ -3,17 +3,15 @@ import jwt from 'jsonwebtoken'
 import { env } from '@/config/environment'
 import ApiError from '@/utils/ApiError'
 
-const generateToken = (user, tokenLife = '1h') => {
+const generateToken = (user) => {
   return jwt.sign(user, env.JWT_SECRET, {
-    algorithm: 'HS256',
-    expiresIn: tokenLife
+    algorithm: 'HS256'
   })
 }
 
-const createToken = (user, tokenLife = '24h') => {
+const createToken = (user) => {
   return jwt.sign(user, env.JWT_SECRET, {
-    algorithm: 'HS256',
-    expiresIn: tokenLife
+    algorithm: 'HS256'
   })
 }
 

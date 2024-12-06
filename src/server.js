@@ -34,7 +34,7 @@ const START_SERVER = async () => {
 
   // Start the server
   server.listen(env.APP_PORT, env.APP_HOST, () => {
-    console.log(`Server running at http://${env.APP_HOST}:${port}`)
+    console.log(`Hello World, I am running at http://${env.APP_HOST}:${env.APP_PORT}`)
   })
 
   // Exit hook to close resources properly

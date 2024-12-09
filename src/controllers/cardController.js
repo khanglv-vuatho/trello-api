@@ -36,8 +36,19 @@ const update = async (req, res, next) => {
   }
 }
 
+const updateDetailCard = async (req, res, next) => {
+  try {
+    console.log(req.params.id, req.body)
+    const updateDetailCard = await cardService.updateDetailCard(req.params.id, req.body)
+    res.status(StatusCodes.OK).json(updateDetailCard)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const cardController = {
   createNew,
   deleteCard,
-  update
+  update,
+  updateDetailCard
 }

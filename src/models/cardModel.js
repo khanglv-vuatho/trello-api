@@ -98,6 +98,12 @@ const deleteOneById = async (cardId) => {
   }
 }
 
+const updateDetailCard = async (cardId, updateData) => {
+  const db = await GET_DB()
+  const result = await db.collection(CARD_COLLECTION_NAME).findOneAndUpdate({ _id: new ObjectId(cardId) }, { $set: updateData }, { returnDocument: 'after' })
+  return result
+}
+
 export const cardModel = {
   CARD_COLLECTION_NAME,
   CARD_COLLECTION_SCHEMA,
@@ -105,5 +111,6 @@ export const cardModel = {
   findOneById,
   update,
   deleteManyByColumnId,
-  deleteOneById
+  deleteOneById,
+  updateDetailCard
 }

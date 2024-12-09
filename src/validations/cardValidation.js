@@ -34,14 +34,27 @@ const deleteCard = async (req, res, next) => {
 }
 
 const update = async (req, res, next) => {
-  const schema = Joi.object({
+  const correctCondition = Joi.object({
     cardId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
     columnId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
     title: Joi.string().min(3).max(50).trim().strict()
   })
 
   try {
-    await schema.validateAsync({ ...req.body, cardId: req.params.id }, { abortEarly: false, allowUnknown: true })
+    await correctCondition.validateAsync({ ...req.body, cardId: req.params.id }, { abortEarly: false, allowUnknown: true })
+    next()
+  } catch (error) {
+    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, error.message))
+  }
+}
+
+const updateDetailCard = async (req, res, next) => {
+  const cardId = req.params.id
+  const correctCondition = Joi.object({
+    cardId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+  })
+  try {
+    await correctCondition.validateAsync({ cardId }, { abortEarly: false, allowUnknown: true })
     next()
   } catch (error) {
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, error.message))
@@ -51,5 +64,6 @@ const update = async (req, res, next) => {
 export const cardValidation = {
   createNew,
   deleteCard,
-  update
+  update,
+  updateDetailCard
 }

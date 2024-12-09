@@ -57,8 +57,19 @@ const update = async (cardId, reqBody) => {
   }
 }
 
+const updateDetailCard = async (cardId, updateData) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const updatedDetailCard = await cardModel.updateDetailCard(cardId, updateData)
+    return updatedDetailCard
+  } catch (error) {
+    throw error
+  }
+}
+
 export const cardService = {
   createNew,
   deleteCard,
-  update
+  update,
+  updateDetailCard
 }

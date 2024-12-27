@@ -8,7 +8,7 @@ export const NOTIFICATION_INVITATION_STATUS = { PENDING: 'pending', ACCEPTED: 'a
 
 export const NOTIFICATION_STATUS = { UNREAD: 'unread', READ: 'read' }
 
-export const MESSAGE_TYPES = { TEXT: 'text', IMAGE: 'image' }
+export const MESSAGE_TYPES = { TEXT: 'TEXT', IMAGE: 'IMAGE' }
 
 export const MEMBER_STATUS = {
   PENDING: 'pending',
@@ -50,5 +50,7 @@ export const SOCKET_EVENTS = {
   UPDATE_BOARD: 'updateBoard',
   UPDATE_COLUMN: 'updateColumn',
   UPDATE_CARD: 'updateCard',
-  UPDATE_MEMBER: 'updateMember'
+  UPDATE_MEMBER: 'updateMember',
+  MESSAGE_ARRIVED: 'message-arrived',
+  MESSAGE_TYPING: 'message-typing'
 }

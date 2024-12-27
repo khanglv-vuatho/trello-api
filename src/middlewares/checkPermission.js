@@ -18,13 +18,6 @@ export const checkPermission = (action) => async (req, res, next) => {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found or deleted')
     }
 
-    // Check if user is board owner
-    // if (board.ownerId === email) {
-    //   req.board = board
-    //   req.userRole = BOARD_MEMBER_ROLE.OWNER
-    //   return next()
-    // }
-
     // Find user in board members
     const member = board.memberGmails?.find((m) => m.email === email)
     const isOwner = board.ownerId == email
@@ -36,10 +29,6 @@ export const checkPermission = (action) => async (req, res, next) => {
     if (!allowedRoles?.includes(member?.role) && !isOwner) {
       throw new ApiError(StatusCodes.FORBIDDEN, `Access denied: You need ${allowedRoles.join(' or ')} permission`)
     }
-
-    // Attach board and user role to request
-    // req.board = board
-    // req.userRole = member.role
 
     next()
   } catch (error) {

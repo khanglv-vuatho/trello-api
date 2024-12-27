@@ -1,14 +1,14 @@
 import { conversationModel } from '@/models/conversation'
-import { messageModel } from '@/models/message'
-import { MESSAGE_TYPES } from '@/utils/constants'
-import { uploadFile } from '@/worker'
+import { conversationService } from '@/services/conversationService'
+import { MESSAGE_TYPES, SOCKET_EVENTS } from '@/utils/constants'
 import { StatusCodes } from 'http-status-codes'
-import { env } from '@/config/environment'
-import { v4 as uuidv4 } from 'uuid'
+import { messageController } from '@/controllers/messageController'
+import { sendDataSocketToClient, sendDataSocketToGroupClient } from '@/sockets'
+
 const getAll = async (req, res, next) => {
   try {
-    const { email } = req.params
-    const conversations = await conversationModel.getAll(email)
+    const { email } = req.user
+    const conversations = await conversationService.getAll(email)
     return res.status(StatusCodes.OK).json(conversations)
   } catch (error) {
     next(error)
@@ -17,7 +17,8 @@ const getAll = async (req, res, next) => {
 
 const createNew = async (req, res, next) => {
   try {
-    const { email } = req.params
+    const { email } = req.user
+
     const { content, chatWithUserId } = req.body
     const file = req.file
 
@@ -31,13 +32,20 @@ const createNew = async (req, res, next) => {
     // }
 
     // Create a new message
-    const newMessage = await messageModel.createNew(content, type)
+    const messsage = { content, type, createdAt: Date.now(), email, chatWithUserId }
 
-    // Create a conversation using the message ID
-    const conversation = await conversationModel.createNew(email, newMessage._id.toString(), chatWithUserId)
+    sendDataSocketToGroupClient([chatWithUserId], SOCKET_EVENTS.MESSAGE_ARRIVED, messsage)
 
-    // Respond with the new conversation
-    return res.status(StatusCodes.CREATED).json(conversation)
+    const messsageId = await messageController.createNew(messsage)
+    const [conversationExit] = await conversationModel.findConversationByEmailAndChatWithUserId(email, chatWithUserId)
+    if (conversationExit) {
+      // console.log({ conversationExit })
+      await conversationModel.pushMessageId(conversationExit._id, messsageId)
+    } else {
+      await conversationModel.createNew({ messages: [messsageId], email, chatWithUserId })
+      // await conversationModel.createNew({ messages: { messageId: newMessage._id }, email, chatWithUserId })
+    }
+    res.status(StatusCodes.CREATED).json({ message: 'Send message success' })
   } catch (error) {
     next(error) // Handle any errors
   }

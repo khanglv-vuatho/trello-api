@@ -6,8 +6,7 @@ import { env } from './config/environment.js'
 import { CLOSE_DB, CONNECT_DB } from './config/mongodb.js'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware.js'
 import { APIs_V1 } from './routes/v1/index.js'
-import { initSocket, getIO } from './sockets/index.js' // Import socket module
-import { SOCKET_EVENTS } from './utils/constants.js'
+import { initSocket } from './sockets/index.js' // Import socket module
 
 const START_SERVER = async () => {
   const app = express()

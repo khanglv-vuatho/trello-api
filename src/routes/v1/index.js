@@ -7,7 +7,6 @@ import { userRouter } from './userRoute'
 import { notificationRouter } from './notificationRoute'
 import { conversationRouter } from './conversation'
 import { authenticateJWT } from '@/middlewares/authenticateJWT'
-
 const Router = express.Router()
 
 // Public routes (no authentication needed)
@@ -33,6 +32,7 @@ Router.use((req, res, next) => {
 })
 
 // Routes (authentication applied based on the check above)
+
 Router.use('/boards', boardRouter)
 Router.use('/cards', cardRouter)
 Router.use('/columns', columnRouter)

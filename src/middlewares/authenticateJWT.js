@@ -13,7 +13,6 @@ const authenticateJWT = (req, res, next) => {
   if (!token) {
     throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, 'No token provided')
   }
-
   // Verify and decode the token
   jwt.verify(token, env.JWT_SECRET, (err, user) => {
     if (err) {

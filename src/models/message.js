@@ -1,6 +1,7 @@
 import { GET_DB } from '@/config/mongodb'
 import { MESSAGE_TYPES } from '@/utils/constants'
 import Joi from 'joi'
+import { ObjectId } from 'mongodb'
 
 const MESSAGE_COLLECTION_NAME = 'messages'
 const MESSAGE_COLLECTION_SCHEMA = Joi.object({
@@ -13,14 +14,29 @@ const MESSAGE_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
-const createNew = async (content, type) => {
+const createNew = async (message) => {
   const db = await GET_DB()
-  const result = await db.collection(MESSAGE_COLLECTION_NAME).insertOne({ content, type })
+
+  const result = await db.collection(MESSAGE_COLLECTION_NAME).insertOne(message)
   return result.insertedId
+}
+
+const getDetails = async (id) => {
+  const db = await GET_DB()
+  const message = await db.collection(MESSAGE_COLLECTION_NAME).findOne({ _id: new ObjectId(id) })
+  return message
+}
+
+const getAll = async (conversationId) => {
+  const db = await GET_DB()
+  const messages = await db.collection(MESSAGE_COLLECTION_NAME).find({ conversationId }).toArray()
+  return messages
 }
 
 export const messageModel = {
   MESSAGE_COLLECTION_NAME,
   MESSAGE_COLLECTION_SCHEMA,
-  createNew
+  createNew,
+  getDetails,
+  getAll
 }

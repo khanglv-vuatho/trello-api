@@ -20,6 +20,10 @@ const initSocket = (server) => {
       console.log(`User ${email} registered with socket ID ${socket.id}`)
     })
 
+    socket.on(SOCKET_EVENTS.MESSAGE_TYPING, (data) => {
+      sendDataSocketToGroupClient([data.chatWithUserId], SOCKET_EVENTS.MESSAGE_TYPING, data.typing)
+    })
+
     socket.on(SOCKET_EVENTS.JOIN_BOARD, (roomName) => {
       socket.join(roomName) // Add the user to the room
       console.log(`User with ID ${socket.id} joined room ${roomName}`)
@@ -51,18 +55,19 @@ const sendDataSocketToClient = (email, notificationData) => {
   }
 }
 
-const sendDataSocketToGroupClient = (emails, event, notificationData) => {
+const sendDataSocketToGroupClient = (emails, event, data) => {
   if (!emails) return
   console.log({ userSocketMap, emails })
   emails?.forEach((email) => {
     const socketId = userSocketMap[email] // Get the socket ID for the user
     console.log({ socketId, email })
     if (socketId) {
-      io.to(socketId).emit('updateMember', notificationData) // Emit notification to the user
+      io.to(socketId).emit(event, data) // Emit notification to the user
       console.log(`Notification sent to ${email}`)
     } else {
       console.log(`No socket found for user ${email}, skipping notification`)
     }
   })
 }
+
 export { initSocket, sendDataSocketToClient, sendDataSocketToGroupClient }
